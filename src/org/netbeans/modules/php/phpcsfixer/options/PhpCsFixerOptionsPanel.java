@@ -41,6 +41,8 @@
  */
 package org.netbeans.modules.php.phpcsfixer.options;
 
+import javax.swing.JComboBox;
+
 /**
  *
  * @author junichi11
@@ -70,6 +72,10 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
 
     public void setConfig(String config) {
         configComboBox.setSelectedItem(config);
+    }
+
+    public JComboBox getConfigComboBox() {
+        return configComboBox;
     }
 
     public boolean useCustom() {

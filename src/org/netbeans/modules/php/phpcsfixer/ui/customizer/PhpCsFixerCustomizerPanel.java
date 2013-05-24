@@ -44,6 +44,7 @@ package org.netbeans.modules.php.phpcsfixer.ui.customizer;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JComboBox;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.phpcsfixer.preferences.PhpCsFixerPreferences;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer.Category;
@@ -241,5 +242,7 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
         for (Component component : optionsPanel.getComponents()) {
             component.setEnabled(enabled);
         }
+        JComboBox configComboBox = optionsPanel.getConfigComboBox();
+        configComboBox.setEditable(enabled);
     }
 }
