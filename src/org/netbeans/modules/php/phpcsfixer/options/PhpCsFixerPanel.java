@@ -56,11 +56,11 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private static final String PHPCSFIXER_LAST_FOLDER_SUFFIX = ".phpcsfixer"; // NOI18N
     private boolean useLevel;
     private boolean useConfig;
-    private boolean useFixer;
+    private boolean useFixers;
     private boolean useCustom;
     private boolean isRunOnSave;
     private String config;
-    private String fixer;
+    private String fixers;
     private String custom;
     private String level;
 
@@ -155,8 +155,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         level = options.getLevel();
         useConfig = options.useConfig();
         config = options.getConfig();
-        useFixer = options.useFixer();
-        fixer = options.getFixer();
+        useFixers = options.useFixers();
+        fixers = options.getFixers();
         useCustom = options.useCustom();
         custom = options.getCustom();
         isRunOnSave = options.isRunOnSave();
@@ -164,8 +164,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         optionsPanel.setLevel(level);
         optionsPanel.setConfig(useConfig);
         optionsPanel.setConfig(config);
-        optionsPanel.setFixer(useFixer);
-        optionsPanel.setFixer(fixer);
+        optionsPanel.setFixers(useFixers);
+        optionsPanel.setFixers(fixers);
         optionsPanel.setCustom(useCustom);
         optionsPanel.setCustom(custom);
         optionsPanel.setRunOnSave(isRunOnSave);
@@ -191,11 +191,11 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         if (!config.equals(optionsPanel.getConfig())) {
             options.setConfig(optionsPanel.getConfig());
         }
-        if (useFixer != optionsPanel.useFixer()) {
-            options.setFixer(optionsPanel.useFixer());
+        if (useFixers != optionsPanel.useFixers()) {
+            options.setFixers(optionsPanel.useFixers());
         }
-        if (!fixer.equals(optionsPanel.getFixer())) {
-            options.setFixer(optionsPanel.getFixer());
+        if (!fixers.equals(optionsPanel.getFixers())) {
+            options.setFixers(optionsPanel.getFixers());
         }
         if (useCustom != optionsPanel.useCustom()) {
             options.setCustom(optionsPanel.useCustom());

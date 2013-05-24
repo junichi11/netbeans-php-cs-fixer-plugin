@@ -61,8 +61,8 @@ public final class PhpCsFixerPreferences {
     private static final String LEVEL = "level"; // NOI18N
     private static final String USE_CONFIG = "use-config"; // NOI18N
     private static final String CONFIG = "config"; // NOI18N
-    private static final String USE_FIXER = "use-fixer"; // NOI18N
-    private static final String FIXER = "fixer"; // NOI18N
+    private static final String USE_FIXERS = "use-fixers"; // NOI18N
+    private static final String FIXERS = "fixers"; // NOI18N
     private static final String USE_CUSTOM = "use-custom"; // NOI18N
     private static final String CUSTOM = "custom"; // NOI18N
 
@@ -117,20 +117,20 @@ public final class PhpCsFixerPreferences {
         getPreferences(phpModule).put(CONFIG, config);
     }
 
-    public static boolean useFixer(PhpModule phpModule) {
-        return getPreferences(phpModule).getBoolean(USE_FIXER, false);
+    public static boolean useFixers(PhpModule phpModule) {
+        return getPreferences(phpModule).getBoolean(USE_FIXERS, false);
     }
 
-    public static void setFixer(PhpModule phpModule, boolean use) {
-        getPreferences(phpModule).putBoolean(USE_FIXER, use);
+    public static void setFixers(PhpModule phpModule, boolean use) {
+        getPreferences(phpModule).putBoolean(USE_FIXERS, use);
     }
 
-    public static String getFixer(PhpModule phpModule) {
-        return getPreferences(phpModule).get(FIXER, ""); // NOI18N
+    public static String getFixers(PhpModule phpModule) {
+        return getPreferences(phpModule).get(FIXERS, ""); // NOI18N
     }
 
-    public static void setFixer(PhpModule phpModule, String fixer) {
-        getPreferences(phpModule).put(FIXER, fixer);
+    public static void setFixers(PhpModule phpModule, String fixers) {
+        getPreferences(phpModule).put(FIXERS, fixers);
     }
 
     public static boolean useCustom(PhpModule phpModule) {
@@ -165,8 +165,8 @@ public final class PhpCsFixerPreferences {
         if (useConfig(phpModule) && !getConfig(phpModule).isEmpty()) {
             all.add(String.format(PhpCsFixer.CONFIG_PARAM, getConfig(phpModule)));
         }
-        if (useFixer(phpModule) && !getFixer(phpModule).isEmpty()) {
-            all.add(String.format(PhpCsFixer.FIXER_PARAM, getFixer(phpModule)));
+        if (useFixers(phpModule) && !getFixers(phpModule).isEmpty()) {
+            all.add(String.format(PhpCsFixer.FIXERS_PARAM, getFixers(phpModule)));
         }
         if (useCustom(phpModule) && !getCustom(phpModule).isEmpty()) {
             all.add(getCustom(phpModule));

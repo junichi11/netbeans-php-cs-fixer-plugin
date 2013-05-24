@@ -63,8 +63,8 @@ public final class PhpCsFixerOptions {
     private static final String LEVEL = "level"; // NOI18N
     private static final String USE_CONFIG = "use.config"; // NOI18N
     private static final String CONFIG = "config"; // NOI18N
-    private static final String USE_FIXER = "use.fixer"; // NOI18N
-    private static final String FIXER = "fixer"; // NOI18N
+    private static final String USE_FIXERS = "use.fixers"; // NOI18N
+    private static final String FIXERS = "fixers"; // NOI18N
     private static final String USE_CUSTOM = "use.custom"; // NOI18N
     private static final String CUSTOM = "custom"; // NOI18N
     private volatile boolean phpcsfixerSearched = false;
@@ -125,20 +125,20 @@ public final class PhpCsFixerOptions {
         getPreferences().put(CONFIG, config);
     }
 
-    public boolean useFixer() {
-        return getPreferences().getBoolean(USE_FIXER, false);
+    public boolean useFixers() {
+        return getPreferences().getBoolean(USE_FIXERS, false);
     }
 
-    public void setFixer(boolean use) {
-        getPreferences().putBoolean(USE_FIXER, use);
+    public void setFixers(boolean use) {
+        getPreferences().putBoolean(USE_FIXERS, use);
     }
 
-    public String getFixer() {
-        return getPreferences().get(FIXER, ""); // NOI18N
+    public String getFixers() {
+        return getPreferences().get(FIXERS, ""); // NOI18N
     }
 
-    public void setFixer(String fixer) {
-        getPreferences().put(FIXER, fixer);
+    public void setFixers(String fixers) {
+        getPreferences().put(FIXERS, fixers);
     }
 
     public boolean useCustom() {
@@ -173,8 +173,8 @@ public final class PhpCsFixerOptions {
         if (useConfig() && !getConfig().isEmpty()) {
             all.add(String.format(PhpCsFixer.CONFIG_PARAM, getConfig()));
         }
-        if (useFixer() && !getFixer().isEmpty()) {
-            all.add(String.format(PhpCsFixer.FIXER_PARAM, getFixer()));
+        if (useFixers() && !getFixers().isEmpty()) {
+            all.add(String.format(PhpCsFixer.FIXERS_PARAM, getFixers()));
         }
         if (useCustom() && !getCustom().isEmpty()) {
             all.add(getCustom());

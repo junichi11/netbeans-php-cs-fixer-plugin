@@ -88,20 +88,20 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         customTextField.setText(options);
     }
 
-    public boolean useFixer() {
-        return fixerCheckBox.isSelected();
+    public boolean useFixers() {
+        return fixersCheckBox.isSelected();
     }
 
-    public void setFixer(boolean use) {
-        fixerCheckBox.setSelected(use);
+    public void setFixers(boolean use) {
+        fixersCheckBox.setSelected(use);
     }
 
-    public String getFixer() {
-        return fixerTextField.getText();
+    public String getFixers() {
+        return fixersTextField.getText();
     }
 
-    public void setFixer(String fixerText) {
-        fixerTextField.setText(fixerText);
+    public void setFixers(String fixersText) {
+        fixersTextField.setText(fixersText);
     }
 
     public boolean useLevel() {
@@ -141,8 +141,8 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         levelComboBox = new javax.swing.JComboBox();
         configCheckBox = new javax.swing.JCheckBox();
         configComboBox = new javax.swing.JComboBox();
-        fixerCheckBox = new javax.swing.JCheckBox();
-        fixerTextField = new javax.swing.JTextField();
+        fixersCheckBox = new javax.swing.JCheckBox();
+        fixersTextField = new javax.swing.JTextField();
         customCheckBox = new javax.swing.JCheckBox();
         customTextField = new javax.swing.JTextField();
         runOnSaveCheckBox = new javax.swing.JCheckBox();
@@ -156,9 +156,9 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         configComboBox.setEditable(true);
         configComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "default", "magento", "sf20", "sf21" }));
 
-        org.openide.awt.Mnemonics.setLocalizedText(fixerCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.fixerCheckBox.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(fixersCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.fixersCheckBox.text")); // NOI18N
 
-        fixerTextField.setText(org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.fixerTextField.text")); // NOI18N
+        fixersTextField.setText(org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.fixersTextField.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(customCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.customCheckBox.text")); // NOI18N
 
@@ -173,26 +173,22 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(runOnSaveCheckBox)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(fixerCheckBox)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(levelCheckBox)
+                            .addComponent(configCheckBox)
+                            .addComponent(fixersCheckBox)
+                            .addComponent(customCheckBox))
                         .addGap(18, 18, 18)
-                        .addComponent(fixerTextField))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(customCheckBox)
-                        .addGap(18, 18, 18)
-                        .addComponent(customTextField))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fixersTextField)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(levelCheckBox)
-                                .addGap(18, 18, 18)
-                                .addComponent(levelComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(configCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(configComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(runOnSaveCheckBox))
-                        .addGap(0, 239, Short.MAX_VALUE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(levelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(configComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 228, Short.MAX_VALUE))
+                            .addComponent(customTextField))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -208,8 +204,8 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
                     .addComponent(configComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fixerCheckBox)
-                    .addComponent(fixerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fixersCheckBox)
+                    .addComponent(fixersTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(customCheckBox)
@@ -224,8 +220,8 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox configComboBox;
     private javax.swing.JCheckBox customCheckBox;
     private javax.swing.JTextField customTextField;
-    private javax.swing.JCheckBox fixerCheckBox;
-    private javax.swing.JTextField fixerTextField;
+    private javax.swing.JCheckBox fixersCheckBox;
+    private javax.swing.JTextField fixersTextField;
     private javax.swing.JCheckBox levelCheckBox;
     private javax.swing.JComboBox levelComboBox;
     private javax.swing.JCheckBox runOnSaveCheckBox;

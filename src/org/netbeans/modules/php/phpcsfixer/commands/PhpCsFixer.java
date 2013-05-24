@@ -74,7 +74,7 @@ public final class PhpCsFixer {
     public static final String DRY_RUN_PARAM = "--dry-run"; // NOI18N
     public static final String CONFIG_PARAM = "--config=%s"; // NOI18N
     public static final String LEVEL_PARAM = "--level=%s"; // NOI18N
-    public static final String FIXER_PARAM = "--fixer=%s"; // NOI18N
+    public static final String FIXERS_PARAM = "--fixers=%s"; // NOI18N
     private static final List<String> DEFAULT_PARAMS = Arrays.asList(
             "--ansi", // NOI18N
             "--no-interaction"); // NOI18N

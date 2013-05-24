@@ -63,8 +63,8 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
     private String level;
     private boolean useConfig;
     private String config;
-    private boolean useFixer;
-    private String fixer;
+    private boolean useFixers;
+    private String fixers;
     private boolean useCustom;
     private String custom;
     private boolean isRunOnSave;
@@ -111,11 +111,11 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
             if (!config.equals(optionsPanel.getConfig())) {
                 PhpCsFixerPreferences.setConfig(phpModule, optionsPanel.getConfig());
             }
-            if (useFixer != optionsPanel.useFixer()) {
-                PhpCsFixerPreferences.setFixer(phpModule, optionsPanel.useFixer());
+            if (useFixers != optionsPanel.useFixers()) {
+                PhpCsFixerPreferences.setFixers(phpModule, optionsPanel.useFixers());
             }
-            if (!fixer.equals(optionsPanel.getFixer())) {
-                PhpCsFixerPreferences.setFixer(phpModule, optionsPanel.getFixer());
+            if (!fixers.equals(optionsPanel.getFixers())) {
+                PhpCsFixerPreferences.setFixers(phpModule, optionsPanel.getFixers());
             }
             if (useCustom != optionsPanel.useCustom()) {
                 PhpCsFixerPreferences.setCustom(phpModule, optionsPanel.useCustom());
@@ -146,8 +146,8 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
         level = PhpCsFixerPreferences.getLevel(phpModule);
         useConfig = PhpCsFixerPreferences.useConfig(phpModule);
         config = PhpCsFixerPreferences.getConfig(phpModule);
-        useFixer = PhpCsFixerPreferences.useFixer(phpModule);
-        fixer = PhpCsFixerPreferences.getFixer(phpModule);
+        useFixers = PhpCsFixerPreferences.useFixers(phpModule);
+        fixers = PhpCsFixerPreferences.getFixers(phpModule);
         useCustom = PhpCsFixerPreferences.useCustom(phpModule);
         custom = PhpCsFixerPreferences.getCustom(phpModule);
         isRunOnSave = PhpCsFixerPreferences.isRunOnSave(phpModule);
@@ -159,8 +159,8 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
         optionsPanel.setLevel(level);
         optionsPanel.setConfig(useConfig);
         optionsPanel.setConfig(config);
-        optionsPanel.setFixer(useFixer);
-        optionsPanel.setFixer(fixer);
+        optionsPanel.setFixers(useFixers);
+        optionsPanel.setFixers(fixers);
         optionsPanel.setCustom(useCustom);
         optionsPanel.setCustom(custom);
         optionsPanel.setRunOnSave(isRunOnSave);
