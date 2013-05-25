@@ -41,10 +41,12 @@
  */
 package org.netbeans.modules.php.phpcsfixer.options;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 import org.netbeans.modules.php.api.util.FileUtils;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
 import org.openide.util.NbPreferences;
 
@@ -86,6 +88,16 @@ public final class PhpCsFixerOptions {
                 setPhpCsFixerPath(phpcsfixerPath);
             }
         }
+
+        // check whether file exists
+        if (!StringUtils.isEmpty(phpcsfixerPath)) {
+            File file = new File(phpcsfixerPath);
+            if (!file.exists()) {
+                phpcsfixerPath = ""; // NOI18N
+                setPhpCsFixerPath(phpcsfixerPath);
+            }
+        }
+
         return phpcsfixerPath;
     }
 

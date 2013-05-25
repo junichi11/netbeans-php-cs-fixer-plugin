@@ -42,11 +42,18 @@
 package org.netbeans.modules.php.phpcsfixer.options;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
 import org.openide.filesystems.FileChooserBuilder;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 final class PhpCsFixerPanel extends javax.swing.JPanel {
@@ -82,6 +89,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         browseButton = new javax.swing.JButton();
         phpCsFixerNameLabel = new javax.swing.JLabel();
         optionsPanel = new org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanel();
+        downloadButton = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(pathLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.pathLabel.text")); // NOI18N
 
@@ -96,6 +104,13 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(phpCsFixerNameLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.phpCsFixerNameLabel.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(downloadButton, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.downloadButton.text")); // NOI18N
+        downloadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downloadButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -108,11 +123,13 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(phpCsFixerNameLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 12, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pathTextField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(downloadButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -122,7 +139,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pathLabel)
                     .addComponent(pathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseButton))
+                    .addComponent(browseButton)
+                    .addComponent(downloadButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(phpCsFixerNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -148,6 +166,52 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_browseButtonActionPerformed
 
+    @NbBundle.Messages("LBL_SelectDonwloadFolder=Select download folder")
+    private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
+        File downloadDirectory = new FileChooserBuilder(PhpCsFixerPanel.class.getName() + PHPCSFIXER_LAST_FOLDER_SUFFIX)
+                .setTitle(Bundle.LBL_SelectDonwloadFolder())
+                .setDirectoriesOnly(true)
+                .showOpenDialog();
+        if (downloadDirectory != null) {
+            downloadDirectory = FileUtil.normalizeFile(downloadDirectory);
+            // has phpcsfixer file?
+            FileObject downloadFileObject = FileUtil.toFileObject(downloadDirectory);
+            FileObject[] children = downloadFileObject.getChildren();
+            for (FileObject child : children) {
+                if (!child.isFolder() && child.getNameExt().equals(PhpCsFixer.NAME_LONG)) {
+                    return;
+                }
+            }
+
+            // create file
+            File file = new File(downloadDirectory, PhpCsFixer.NAME_LONG);
+            try {
+                FileOutputStream outputStream = new FileOutputStream(file);
+                try {
+                    URL downloadUrl = new URL(PhpCsFixer.DOWNLOAD_URL);
+                    InputStream inputStream = downloadUrl.openStream();
+                    int data;
+                    while ((data = inputStream.read()) != -1) {
+                        outputStream.write(data);
+                    }
+                    setPath(file.getCanonicalPath());
+                } finally {
+                    outputStream.close();
+                }
+            } catch (MalformedURLException ex) {
+                if (file.exists()) {
+                    file.delete();
+                }
+                Exceptions.printStackTrace(ex);
+            } catch (IOException ex) {
+                if (file.exists()) {
+                    file.delete();
+                }
+                downloadButton.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_downloadButtonActionPerformed
+
     void load() {
         PhpCsFixerOptions options = getOptions();
         setPath(options.getPhpCsFixerPath());
@@ -169,6 +233,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         optionsPanel.setCustom(useCustom);
         optionsPanel.setCustom(custom);
         optionsPanel.setRunOnSave(isRunOnSave);
+        downloadButton.setEnabled(true);
     }
 
     void store() {
@@ -230,6 +295,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
+    private javax.swing.JButton downloadButton;
     private org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanel optionsPanel;
     private javax.swing.JLabel pathLabel;
     private javax.swing.JTextField pathTextField;
