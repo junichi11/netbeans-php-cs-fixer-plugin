@@ -44,10 +44,8 @@ package org.netbeans.modules.php.phpcsfixer.onsave;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
-import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions;
 import org.netbeans.modules.php.phpcsfixer.preferences.PhpCsFixerPreferences;
@@ -119,7 +117,7 @@ public final class PhpCsFixerOnSaveTask implements OnSaveTask {
         return true;
     }
 
-    @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = OnSaveTask.Factory.class, position = 1100)
+//    @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = OnSaveTask.Factory.class, position = 1100)
     public static final class FactoryImpl implements Factory {
 
         @Override
