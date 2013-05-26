@@ -36,7 +36,7 @@ https://github.com/fabpot/PHP-CS-Fixer
 
 
 ## TODO
-- add run on save feature (not yet)
+- add run on save feature (not yet). This feature has a problem (#2).
 
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
