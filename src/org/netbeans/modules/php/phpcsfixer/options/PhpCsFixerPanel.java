@@ -179,6 +179,11 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             FileObject[] children = downloadFileObject.getChildren();
             for (FileObject child : children) {
                 if (!child.isFolder() && child.getNameExt().equals(PhpCsFixer.NAME_LONG)) {
+                    try {
+                        setPath(FileUtil.toFile(child).getCanonicalPath());
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                     return;
                 }
             }
