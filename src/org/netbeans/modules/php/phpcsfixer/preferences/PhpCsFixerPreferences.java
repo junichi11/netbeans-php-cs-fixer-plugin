@@ -65,6 +65,8 @@ public final class PhpCsFixerPreferences {
     private static final String FIXERS = "fixers"; // NOI18N
     private static final String USE_CUSTOM = "use-custom"; // NOI18N
     private static final String CUSTOM = "custom"; // NOI18N
+    private static final String VERBOSE = "verbose"; // NOI18N
+    private static final String DIFF = "diff"; // NOI18N
 
     private PhpCsFixerPreferences() {
     }
@@ -155,6 +157,22 @@ public final class PhpCsFixerPreferences {
 
     public static void setRunOnSave(PhpModule phpModule, boolean isRunOnSave) {
         getPreferences(phpModule).putBoolean(RUN_ON_SAVE, isRunOnSave);
+    }
+
+    public static boolean isVerbose(PhpModule phpModule) {
+        return getPreferences(phpModule).getBoolean(VERBOSE, false);
+    }
+
+    public static void setVerbose(PhpModule phpModule, boolean isVerbose) {
+        getPreferences(phpModule).putBoolean(VERBOSE, isVerbose);
+    }
+
+    public static boolean isDiff(PhpModule phpModule) {
+        return getPreferences(phpModule).getBoolean(DIFF, false);
+    }
+
+    public static void setDiff(PhpModule phpModule, boolean isDiff) {
+        getPreferences(phpModule).putBoolean(DIFF, isDiff);
     }
 
     public static List<String> getAllOptions(PhpModule phpModule) {

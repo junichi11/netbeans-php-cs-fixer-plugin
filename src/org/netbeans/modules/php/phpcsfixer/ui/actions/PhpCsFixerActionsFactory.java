@@ -91,7 +91,9 @@ public class PhpCsFixerActionsFactory extends AbstractAction implements Presente
         }
         String phpCsFixerPath = PhpCsFixerOptions.getInstance().getPhpCsFixerPath();
         if (StringUtils.isEmpty(phpCsFixerPath)) {
-            return null;
+            JMenuItem item = new JMenuItem();
+            item.setVisible(false);
+            return item;
         }
         if (actions == null) {
             actions = new PhpCsFixerActions();
