@@ -137,6 +137,22 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         runOnSaveCheckBox.setSelected(use);
     }
 
+    public boolean isVerbose() {
+        return verboseCheckBox.isSelected();
+    }
+
+    public void setVerbose(boolean isVerbose) {
+        verboseCheckBox.setSelected(isVerbose);
+    }
+
+    public boolean isDiff() {
+        return diffCheckBox.isSelected();
+    }
+
+    public void setDiff(boolean isDiff) {
+        diffCheckBox.setSelected(isDiff);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -155,6 +171,10 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         customCheckBox = new javax.swing.JCheckBox();
         customTextField = new javax.swing.JTextField();
         runOnSaveCheckBox = new javax.swing.JCheckBox();
+        dryRunLabel = new javax.swing.JLabel();
+        dryRunSeparator = new javax.swing.JSeparator();
+        verboseCheckBox = new javax.swing.JCheckBox();
+        diffCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(levelCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.levelCheckBox.text")); // NOI18N
 
@@ -175,6 +195,12 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(runOnSaveCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.runOnSaveCheckBox.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(dryRunLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.dryRunLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(verboseCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.verboseCheckBox.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(diffCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.diffCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -182,7 +208,6 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(runOnSaveCheckBox)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(levelCheckBox)
@@ -197,7 +222,19 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
                                     .addComponent(levelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(configComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 228, Short.MAX_VALUE))
-                            .addComponent(customTextField))))
+                            .addComponent(customTextField)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(dryRunLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dryRunSeparator))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(runOnSaveCheckBox)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(verboseCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(diffCheckBox)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -221,6 +258,14 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
                     .addComponent(customTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(runOnSaveCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(dryRunLabel)
+                    .addComponent(dryRunSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(verboseCheckBox)
+                    .addComponent(diffCheckBox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -229,10 +274,14 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox configComboBox;
     private javax.swing.JCheckBox customCheckBox;
     private javax.swing.JTextField customTextField;
+    private javax.swing.JCheckBox diffCheckBox;
+    private javax.swing.JLabel dryRunLabel;
+    private javax.swing.JSeparator dryRunSeparator;
     private javax.swing.JCheckBox fixersCheckBox;
     private javax.swing.JTextField fixersTextField;
     private javax.swing.JCheckBox levelCheckBox;
     private javax.swing.JComboBox levelComboBox;
     private javax.swing.JCheckBox runOnSaveCheckBox;
+    private javax.swing.JCheckBox verboseCheckBox;
     // End of variables declaration//GEN-END:variables
 }

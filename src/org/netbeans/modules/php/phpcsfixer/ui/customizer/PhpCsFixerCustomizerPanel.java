@@ -69,6 +69,8 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
     private boolean useCustom;
     private String custom;
     private boolean isRunOnSave;
+    private boolean isVerbose;
+    private boolean isDiff;
 
     /**
      * Creates new form PhpCsFixerCustomizerPanel
@@ -127,6 +129,12 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
             if (isRunOnSave != optionsPanel.isRunOnSave()) {
                 PhpCsFixerPreferences.setRunOnSave(phpModule, optionsPanel.isRunOnSave());
             }
+            if (isVerbose != optionsPanel.isVerbose()) {
+                PhpCsFixerPreferences.setVerbose(phpModule, optionsPanel.isVerbose());
+            }
+            if (isDiff != optionsPanel.isDiff()) {
+                PhpCsFixerPreferences.setDiff(phpModule, optionsPanel.isDiff());
+            }
         } else {
             // do nothing
         }
@@ -152,6 +160,8 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
         useCustom = PhpCsFixerPreferences.useCustom(phpModule);
         custom = PhpCsFixerPreferences.getCustom(phpModule);
         isRunOnSave = PhpCsFixerPreferences.isRunOnSave(phpModule);
+        isVerbose = PhpCsFixerPreferences.isVerbose(phpModule);
+        isDiff = PhpCsFixerPreferences.isDiff(phpModule);
         // global, project
         useGlobalRadioButton.setSelected(isGlobal);
         useProjectRadioButton.setSelected(isProject);
@@ -165,6 +175,8 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
         optionsPanel.setCustom(useCustom);
         optionsPanel.setCustom(custom);
         optionsPanel.setRunOnSave(isRunOnSave);
+        optionsPanel.setVerbose(isVerbose);
+        optionsPanel.setDiff(isDiff);
     }
 
     /**

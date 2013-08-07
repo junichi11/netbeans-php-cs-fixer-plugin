@@ -66,6 +66,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private boolean useFixers;
     private boolean useCustom;
     private boolean isRunOnSave;
+    private boolean isVerbose;
+    private boolean isDiff;
     private String config;
     private String fixers;
     private String custom;
@@ -229,6 +231,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         useCustom = options.useCustom();
         custom = options.getCustom();
         isRunOnSave = options.isRunOnSave();
+        isVerbose = options.isVerbose();
+        isDiff = options.isDiff();
         optionsPanel.setLevel(useLevel);
         optionsPanel.setLevel(level);
         optionsPanel.setConfig(useConfig);
@@ -238,6 +242,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         optionsPanel.setCustom(useCustom);
         optionsPanel.setCustom(custom);
         optionsPanel.setRunOnSave(isRunOnSave);
+        optionsPanel.setVerbose(isVerbose);
+        optionsPanel.setDiff(isDiff);
         downloadButton.setEnabled(true);
     }
 
@@ -275,6 +281,12 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         }
         if (isRunOnSave != optionsPanel.isRunOnSave()) {
             options.setRunOnSave(optionsPanel.isRunOnSave());
+        }
+        if (isVerbose != optionsPanel.isVerbose()) {
+            options.setVerbose(optionsPanel.isVerbose());
+        }
+        if (isDiff != optionsPanel.isDiff()) {
+            options.setDiff(optionsPanel.isDiff());
         }
     }
 

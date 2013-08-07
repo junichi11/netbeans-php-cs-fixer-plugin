@@ -49,6 +49,7 @@ import static javax.swing.Action.NAME;
 import static javax.swing.Action.SHORT_DESCRIPTION;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions;
 import org.netbeans.modules.php.phpcsfixer.preferences.PhpCsFixerPreferences;
 import org.openide.util.Exceptions;
@@ -93,16 +94,40 @@ public abstract class PhpCsFixerBaseAction extends AbstractAction {
         if (phpModule == null) {
             return options;
         }
+        boolean isDryRun = isDryRun();
+        boolean isVerbose;
+        boolean isDiff;
 
         if (PhpCsFixerPreferences.useGlobal(phpModule)) {
             // use global
             PhpCsFixerOptions instance = PhpCsFixerOptions.getInstance();
             options.addAll(instance.getAllOptions());
+            isVerbose = instance.isVerbose();
+            isDiff = instance.isDiff();
         } else {
             // use project
             options.addAll(PhpCsFixerPreferences.getAllOptions(phpModule));
+            isVerbose = PhpCsFixerPreferences.isVerbose(phpModule);
+            isDiff = PhpCsFixerPreferences.isDiff(phpModule);
+        }
+
+        if (isDryRun) {
+            if (isVerbose) {
+                options.add("--verbose"); // NOI18N
+                if (isDiff) {
+                    options.add("--diff"); // NOI18N
+                }
+            }
         }
 
         return options;
+    }
+
+    private boolean isDryRun() {
+        String name = getName();
+        if (StringUtils.isEmpty(name)) {
+            return false;
+        }
+        return name.contains("--dry-run"); // NOI18N
     }
 }
