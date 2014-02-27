@@ -77,7 +77,7 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         configComboBox.setSelectedItem(config);
     }
 
-    public JComboBox getConfigComboBox() {
+    public JComboBox<String> getConfigComboBox() {
         return configComboBox;
     }
 
@@ -163,9 +163,9 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         levelCheckBox = new javax.swing.JCheckBox();
-        levelComboBox = new javax.swing.JComboBox();
+        levelComboBox = new javax.swing.JComboBox<String>();
         configCheckBox = new javax.swing.JCheckBox();
-        configComboBox = new javax.swing.JComboBox();
+        configComboBox = new javax.swing.JComboBox<String>();
         fixersCheckBox = new javax.swing.JCheckBox();
         fixersTextField = new javax.swing.JTextField();
         customCheckBox = new javax.swing.JCheckBox();
@@ -178,12 +178,12 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(levelCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.levelCheckBox.text")); // NOI18N
 
-        levelComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "psr0", "psr1", "psr2", "all" }));
+        levelComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "", "psr0", "psr1", "psr2", "all" }));
 
         org.openide.awt.Mnemonics.setLocalizedText(configCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.configCheckBox.text")); // NOI18N
 
         configComboBox.setEditable(true);
-        configComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "default", "magento", "sf20", "sf21" }));
+        configComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "", "default", "magento", "sf20", "sf21" }));
 
         org.openide.awt.Mnemonics.setLocalizedText(fixersCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.fixersCheckBox.text")); // NOI18N
 
@@ -271,7 +271,7 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox configCheckBox;
-    private javax.swing.JComboBox configComboBox;
+    private javax.swing.JComboBox<String> configComboBox;
     private javax.swing.JCheckBox customCheckBox;
     private javax.swing.JTextField customTextField;
     private javax.swing.JCheckBox diffCheckBox;
@@ -280,7 +280,7 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox fixersCheckBox;
     private javax.swing.JTextField fixersTextField;
     private javax.swing.JCheckBox levelCheckBox;
-    private javax.swing.JComboBox levelComboBox;
+    private javax.swing.JComboBox<String> levelComboBox;
     private javax.swing.JCheckBox runOnSaveCheckBox;
     private javax.swing.JCheckBox verboseCheckBox;
     // End of variables declaration//GEN-END:variables
