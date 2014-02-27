@@ -80,7 +80,7 @@ public final class PhpCsFixerOnSaveTask implements OnSaveTask {
         if (fileObject != null) {
             // check run on save option
             boolean isRunOnSave;
-            final PhpModule phpModule = PhpModule.forFileObject(fileObject);
+            final PhpModule phpModule = PhpModule.Factory.forFileObject(fileObject);
             if (PhpCsFixerPreferences.useProject(phpModule)) {
                 isRunOnSave = PhpCsFixerPreferences.isRunOnSave(phpModule);
             } else {
@@ -92,7 +92,6 @@ public final class PhpCsFixerOnSaveTask implements OnSaveTask {
 
             // FIXME
             // command is run but editor is not reload
-
             // add FileChangeListener
             fileObject.addFileChangeListener(new FileChangeAdapter() {
                 @Override

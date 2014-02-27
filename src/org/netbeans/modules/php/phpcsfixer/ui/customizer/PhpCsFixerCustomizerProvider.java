@@ -69,7 +69,7 @@ public final class PhpCsFixerCustomizerProvider implements ProjectCustomizer.Com
 
     @Override
     public JComponent createComponent(ProjectCustomizer.Category category, Lookup context) {
-        PhpModule phpModule = PhpModule.lookupPhpModule(context);
+        PhpModule phpModule = PhpModule.Factory.lookupPhpModule(context);
         return new PhpCsFixerCustomizerPanel(category, phpModule);
     }
 }
