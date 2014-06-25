@@ -43,8 +43,11 @@ package org.netbeans.modules.php.phpcsfixer.ui.actions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
@@ -82,17 +85,31 @@ public class FixAction extends PhpCsFixerBaseAction {
 
     @Override
     protected void runCommand(PhpModule phpModule, List<String> options) throws InvalidPhpExecutableException {
-        List<String> params = getAllParams(options);
-        if (params != null) {
-            PhpCsFixer.getDefault().fix(phpModule, params.toArray(new String[0]));
+        for (FileObject target : getTargetFiles()) {
+            List<String> params = getAllParams(target, options);
+            if (!params.isEmpty()) {
+                Future<Integer> result = PhpCsFixer.getDefault().fix(phpModule, params.toArray(new String[0]));
+                if (result != null) {
+                    try {
+                        result.get();
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
+                    } catch (ExecutionException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
         }
     }
 
-    protected List<String> getAllParams(List<String> options) {
+    protected Collection<? extends FileObject> getTargetFiles() {
         Lookup context = Utilities.actionsGlobalContext();
-        FileObject target = context.lookup(FileObject.class);
+        return context.lookupAll(FileObject.class);
+    }
+
+    protected List<String> getAllParams(FileObject target, List<String> options) {
         if (target == null) {
-            return null;
+            return Collections.emptyList();
         }
         String targetPath = null;
         try {
@@ -101,7 +118,7 @@ public class FixAction extends PhpCsFixerBaseAction {
             Exceptions.printStackTrace(ex);
         }
         if (StringUtils.isEmpty(targetPath)) {
-            return null;
+            return Collections.emptyList();
         }
 
         List<String> params = new ArrayList<String>(Collections.singletonList(targetPath));
