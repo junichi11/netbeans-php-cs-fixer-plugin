@@ -49,6 +49,8 @@ import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -60,6 +62,14 @@ import org.openide.util.Utilities;
  *
  * @author junichi11
  */
+@ActionID(
+        category = "PHP",
+        id = "org.netbeans.modules.php.phpcsfixer.ui.actions.FixAction"
+)
+@ActionRegistration(
+        displayName = "#CTL_FixAction"
+)
+@NbBundle.Messages("CTL_FixAction=PHP CS Fixer: Fix")
 public class FixAction extends PhpCsFixerBaseAction {
 
     private static final long serialVersionUID = -3347012049948024185L;

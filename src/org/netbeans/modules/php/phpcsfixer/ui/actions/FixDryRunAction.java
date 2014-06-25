@@ -45,12 +45,22 @@ import java.util.List;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author junichi11
  */
+@ActionID(
+        category = "PHP",
+        id = "org.netbeans.modules.php.phpcsfixer.ui.actions.FixDryRunAction"
+)
+@ActionRegistration(
+        displayName = "#CTL_FixDryRunAction"
+)
+@NbBundle.Messages("CTL_FixDryRunAction=PHP CS Fixer: Fix --dry-run")
 public class FixDryRunAction extends FixAction {
 
     private static final long serialVersionUID = 7751096230753168096L;
