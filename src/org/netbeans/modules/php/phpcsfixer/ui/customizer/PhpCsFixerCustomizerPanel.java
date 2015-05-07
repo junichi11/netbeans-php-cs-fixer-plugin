@@ -254,7 +254,7 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
         for (Component component : optionsPanel.getComponents()) {
             component.setEnabled(enabled);
         }
-        JComboBox configComboBox = optionsPanel.getConfigComboBox();
+        JComboBox<String> configComboBox = optionsPanel.getConfigComboBox();
         configComboBox.setEditable(enabled);
     }
 }

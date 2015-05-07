@@ -34,6 +34,9 @@ https://github.com/fabpot/PHP-CS-Fixer
     - fix --dry-run
     - self-update
 
+## Download
+
+http://plugins.netbeans.org/plugin/49042/php-cs-fixer
 
 ## TODO
 - add run on save feature (not yet). This feature has a problem (#2).

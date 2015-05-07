@@ -76,7 +76,7 @@ public abstract class PhpCsFixerBaseAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        PhpModule phpModule = PhpModule.inferPhpModule();
+        PhpModule phpModule = PhpModule.Factory.inferPhpModule();
         if (phpModule == null) {
             return;
         }
@@ -89,7 +89,7 @@ public abstract class PhpCsFixerBaseAction extends AbstractAction {
     }
 
     private List<String> getOptions() {
-        PhpModule phpModule = PhpModule.inferPhpModule();
+        PhpModule phpModule = PhpModule.Factory.inferPhpModule();
         List<String> options = new ArrayList<String>();
         if (phpModule == null) {
             return options;

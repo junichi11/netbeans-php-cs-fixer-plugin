@@ -48,23 +48,29 @@ import org.netbeans.modules.php.api.util.UiUtils;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
-@OptionsPanelController.SubRegistration(
-        location = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory",
-        displayName = "#AdvancedOption_DisplayName_PhpCsFixer",
-        id = PhpCsFixerOptionsPanelController.OPTIONS_SUBPATH,
-        keywords = "#AdvancedOption_Keywords_PhpCsFixer",
-        keywordsCategory = "org-netbeans-modules-php-project-ui-options-PHPOptionsCategory/PhpCsFixer")
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_PhpCsFixer=PHP CS Fixer", "AdvancedOption_Keywords_PhpCsFixer=PHP CS Fixer"})
+@UiUtils.PhpOptionsPanelRegistration(
+        id = PhpCsFixerOptionsPanelController.ID,
+        displayName = "#LBL_PhpCsFixerOptionsName",
+        position = 2000
+)
+@NbBundle.Messages({
+    "LBL_PhpCsFixerOptionsName=PHP CS Fixer",
+    "PhpCsFixer.options.keywords.TabTitle=Frameworks & Tools"
+})
+@OptionsPanelController.Keywords(keywords = {"php", "php cs fixer", "php coding standards fixer"},
+        location = UiUtils.OPTIONS_PATH, tabTitle = "#PhpCsFixer.options.keywords.TabTitle")
 public final class PhpCsFixerOptionsPanelController extends OptionsPanelController {
 
+    public static final String ID = "PHP-CS-Fixer"; // NOI18N
     public static final String OPTIONS_SUBPATH = "PHPCSFixer"; // NOI18N
     private PhpCsFixerPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
     public static String getOptionsPath() {
-        return UiUtils.OPTIONS_PATH + "/" + OPTIONS_SUBPATH; // NOI18N
+        return UiUtils.FRAMEWORKS_AND_TOOLS_OPTIONS_PATH;
     }
 
     @Override
