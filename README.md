@@ -2,7 +2,7 @@
 You can run fix command with this plugin.
 
 ## PHP CS Fixer
-https://github.com/fabpot/PHP-CS-Fixer
+https://github.com/FriendsOfPHP/PHP-CS-Fixer
 
 ## Environment
 - NetBeans 7.3+
