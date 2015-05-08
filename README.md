@@ -5,7 +5,7 @@ You can run fix command with this plugin.
 https://github.com/FriendsOfPHP/PHP-CS-Fixer
 
 ## Environment
-- NetBeans 7.3+
+- NetBeans 8.0+
 
 ## Available Commands
 - fix
