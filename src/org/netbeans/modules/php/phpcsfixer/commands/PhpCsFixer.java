@@ -58,7 +58,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 
 /**
- * @see https://github.com/fabpot/PHP-CS-Fixer
+ * @see https://github.com/FriendsOfPHP/PHP-CS-Fixer
  * @author junichi11
  */
 public final class PhpCsFixer {
@@ -66,7 +66,7 @@ public final class PhpCsFixer {
     // PHP CS Fixer
     public static final String NAME = "php-cs-fixer"; // NOI18N
     public static final String NAME_LONG = NAME + ".phar"; // NOI18N
-    public static final String DOWNLOAD_URL = "http://cs.sensiolabs.org/get/php-cs-fixer.phar"; // NOI18N
+    public static final String DOWNLOAD_URL = "http://get.sensiolabs.org/php-cs-fixer.phar"; // NOI18N
     private final String phpcsfixerPath;
     // commands
     private static final String FIX_COMMAND = "fix"; // NOI18N
