@@ -178,12 +178,12 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(levelCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.levelCheckBox.text")); // NOI18N
 
-        levelComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "", "psr0", "psr1", "psr2"}));
+        levelComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "", "psr0", "psr1", "psr2", "symfony"}));
 
         org.openide.awt.Mnemonics.setLocalizedText(configCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.configCheckBox.text")); // NOI18N
 
         configComboBox.setEditable(true);
-        configComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "", "default", "magento", "sf20", "sf21" }));
+        configComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "", "default", "magento", "sf23"}));
 
         org.openide.awt.Mnemonics.setLocalizedText(fixersCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.fixersCheckBox.text")); // NOI18N
 
