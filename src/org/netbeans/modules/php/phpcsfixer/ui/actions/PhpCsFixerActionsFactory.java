@@ -108,10 +108,7 @@ public class PhpCsFixerActionsFactory extends AbstractAction implements Presente
             return false;
         }
         PhpModule phpModule = PhpModule.Factory.forFileObject(target);
-        if (phpModule == null) {
-            return false;
-        }
-        return true;
+        return phpModule != null;
     }
 
     //~ inner class

@@ -305,10 +305,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     boolean valid() {
         // TODO check whether form is consistent and complete
         String path = pathTextField.getText();
-        if (StringUtils.isEmpty(path)) {
-            return false;
-        }
-        return true;
+        return !StringUtils.isEmpty(path);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
@@ -330,10 +327,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 return true;
             }
             String name = f.getName();
-            if (f.isFile() && name.startsWith(PhpCsFixer.NAME)) {
-                return true;
-            }
-            return false;
+            return f.isFile() && name.startsWith(PhpCsFixer.NAME);
         }
 
         @Override
