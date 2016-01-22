@@ -71,7 +71,7 @@ import org.openide.util.actions.Presenter;
     @ActionReference(path = "Loaders/folder/any/Actions", position = 1600),
     @ActionReference(path = "Loaders/text/x-php5/Actions", position = 1600),
     @ActionReference(path = "Editors/text/x-php5/Popup", position = 600),
-    @ActionReference(path = "Projects/org-netbeans-modules-php-phpproject/Actions", position = 1100)
+    @ActionReference(path = "Projects/org-netbeans-modules-php-project/Actions", position = 1100)
 })
 @NbBundle.Messages("PhpCsFixerActionsFactory.name=PHP CS Fixer")
 public class PhpCsFixerActionsFactory extends AbstractAction implements Presenter.Popup {
@@ -108,10 +108,7 @@ public class PhpCsFixerActionsFactory extends AbstractAction implements Presente
             return false;
         }
         PhpModule phpModule = PhpModule.Factory.forFileObject(target);
-        if (phpModule == null) {
-            return false;
-        }
-        return true;
+        return phpModule != null;
     }
 
     //~ inner class
