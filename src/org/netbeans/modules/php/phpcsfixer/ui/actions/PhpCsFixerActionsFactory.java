@@ -45,9 +45,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions;
+import org.netbeans.spi.project.ui.support.ProjectConvertors;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -68,10 +71,10 @@ import org.openide.util.actions.Presenter;
 @ActionRegistration(
         displayName = "#PhpCsFixerActionsFactory.name", lazy = false)
 @ActionReferences({
-    @ActionReference(path = "Loaders/folder/any/Actions", position = 1600),
-    @ActionReference(path = "Loaders/text/x-php5/Actions", position = 1600),
-    @ActionReference(path = "Editors/text/x-php5/Popup", position = 600),
-    @ActionReference(path = "Projects/org-netbeans-modules-php-project/Actions", position = 1100)
+    @ActionReference(path = "Loaders/folder/any/Actions", position = 1690),
+    @ActionReference(path = "Loaders/text/x-php5/Actions", position = 1690),
+    @ActionReference(path = "Editors/text/x-php5/Popup", position = 590),
+    @ActionReference(path = "Projects/org-netbeans-modules-php-project/Actions", position = 1090)
 })
 @NbBundle.Messages("PhpCsFixerActionsFactory.name=PHP CS Fixer")
 public class PhpCsFixerActionsFactory extends AbstractAction implements Presenter.Popup {
@@ -87,7 +90,7 @@ public class PhpCsFixerActionsFactory extends AbstractAction implements Presente
     @Override
     public JMenuItem getPopupPresenter() {
         if (!isInPhpModule()) {
-            return null;
+            return new JMenuItem();
         }
         String phpCsFixerPath = PhpCsFixerOptions.getInstance().getPhpCsFixerPath();
         if (StringUtils.isEmpty(phpCsFixerPath)) {
@@ -107,7 +110,21 @@ public class PhpCsFixerActionsFactory extends AbstractAction implements Presente
         if (target == null) {
             return false;
         }
-        PhpModule phpModule = PhpModule.Factory.forFileObject(target);
+        if (!target.isFolder()) {
+            return true;
+        }
+        Project nonConvertorOwner = ProjectConvertors.getNonConvertorOwner(target);
+        if (nonConvertorOwner == null) {
+            nonConvertorOwner = FileOwnerQuery.getOwner(target);
+            if (nonConvertorOwner == null) {
+                return false;
+            }
+        }
+        PhpModule phpModule = PhpModule.Factory.lookupPhpModule(nonConvertorOwner);
+        if (phpModule != null) {
+            return true;
+        }
+        phpModule = PhpModule.Factory.forFileObject(target);
         return phpModule != null;
     }
 
