@@ -15,7 +15,7 @@ https://github.com/FriendsOfPHP/PHP-CS-Fixer
 ## Settings
 
 ### Global
- `Tools > Options > PHP > PHP CS Fixer`
+ `Tools > Options > PHP > Framework & Tools > PHP CS Fixer`
 - set PHP CS Fixer path
 - set fix command options
 
