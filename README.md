@@ -4,8 +4,14 @@ You can run fix command with this plugin.
 ## PHP CS Fixer
 https://github.com/FriendsOfPHP/PHP-CS-Fixer
 
-## Environment
-- NetBeans 8.0+
+## Available versions of PHP CS Fixer
+
+- 1.x
+- 2.x (v0.6.0)
+
+## Requirements
+
+- NetBeans 8.2+
 
 ## Available Commands
 - fix
@@ -17,6 +23,7 @@ https://github.com/FriendsOfPHP/PHP-CS-Fixer
 ### Global
  `Tools > Options > PHP > Framework & Tools > PHP CS Fixer`
 - set PHP CS Fixer path
+- select a version
 - set fix command options
 
 ### Project

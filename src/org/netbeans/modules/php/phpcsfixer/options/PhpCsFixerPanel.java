@@ -61,17 +61,24 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private static final long serialVersionUID = 8727885479187122174L;
     private final PhpCsFixerOptionsPanelController controller;
     private static final String PHPCSFIXER_LAST_FOLDER_SUFFIX = ".phpcsfixer"; // NOI18N
+
+    private int version;
+    // 1.x
     private boolean useLevel;
     private boolean useConfig;
     private boolean useFixers;
+    private String level;
+    private String config;
+    private String fixers;
+    // 2.x
+    private boolean useRules;
+    private String rules;
+    // common
     private boolean useCustom;
     private boolean isRunOnSave;
     private boolean isVerbose;
     private boolean isDiff;
-    private String config;
-    private String fixers;
     private String custom;
-    private String level;
 
     PhpCsFixerPanel(PhpCsFixerOptionsPanelController controller) {
         this.controller = controller;
@@ -146,7 +153,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(phpCsFixerNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -193,8 +200,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             // create file
             File file = new File(downloadDirectory, PhpCsFixer.NAME_LONG);
             try {
-                FileOutputStream outputStream = new FileOutputStream(file);
-                try {
+                try (FileOutputStream outputStream = new FileOutputStream(file)) {
                     URL downloadUrl = new URL(PhpCsFixer.DOWNLOAD_URL);
                     InputStream inputStream = downloadUrl.openStream();
                     int data;
@@ -202,8 +208,6 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                         outputStream.write(data);
                     }
                     setPath(file.getCanonicalPath());
-                } finally {
-                    outputStream.close();
                 }
             } catch (MalformedURLException ex) {
                 if (file.exists()) {
@@ -222,23 +226,42 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     void load() {
         PhpCsFixerOptions options = getOptions();
         setPath(options.getPhpCsFixerPath());
+
+        version = options.getVersion();
+
+        // 1.x
         useLevel = options.useLevel();
         level = options.getLevel();
         useConfig = options.useConfig();
         config = options.getConfig();
         useFixers = options.useFixers();
         fixers = options.getFixers();
+
+        // 2.x
+        useRules = options.useRules();
+        rules = options.getRules();
+
+        // common
         useCustom = options.useCustom();
         custom = options.getCustom();
         isRunOnSave = options.isRunOnSave();
         isVerbose = options.isVerbose();
         isDiff = options.isDiff();
+
+        optionsPanel.setVersion(version);
+        // 1.x
         optionsPanel.setLevel(useLevel);
         optionsPanel.setLevel(level);
         optionsPanel.setConfig(useConfig);
         optionsPanel.setConfig(config);
         optionsPanel.setFixers(useFixers);
         optionsPanel.setFixers(fixers);
+
+        // 2.x
+        optionsPanel.setRules(useRules);
+        optionsPanel.setRules(rules);
+
+        // common
         optionsPanel.setCustom(useCustom);
         optionsPanel.setCustom(custom);
         optionsPanel.setRunOnSave(isRunOnSave);
@@ -255,6 +278,10 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         } else {
             options.setPhpCsFixerPath(""); // NOI18N
         }
+        if (version != optionsPanel.getVersion()) {
+            options.setVersion(optionsPanel.getVersion());
+        }
+        // 1.x
         if (useLevel != optionsPanel.useLevel()) {
             options.setLevel(optionsPanel.useLevel());
         }
@@ -273,9 +300,17 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         if (!fixers.equals(optionsPanel.getFixers())) {
             options.setFixers(optionsPanel.getFixers());
         }
+        // 2.x
+        if (useRules != optionsPanel.useRules()) {
+            options.setRules(optionsPanel.useRules());
+        }
+        if (!rules.equals(optionsPanel.getRules())) {
+            options.setRules(optionsPanel.getRules());
+        }
         if (useCustom != optionsPanel.useCustom()) {
             options.setCustom(optionsPanel.useCustom());
         }
+        // common
         if (!custom.equals(optionsPanel.getCustom())) {
             options.setCustom(optionsPanel.getCustom());
         }
@@ -307,6 +342,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         String path = pathTextField.getText();
         return !StringUtils.isEmpty(path);
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JButton downloadButton;
