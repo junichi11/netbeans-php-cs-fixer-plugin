@@ -92,9 +92,7 @@ public class FixAction extends PhpCsFixerBaseAction {
                 if (result != null) {
                     try {
                         result.get();
-                    } catch (InterruptedException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (ExecutionException ex) {
+                    } catch (InterruptedException | ExecutionException ex) {
                         Exceptions.printStackTrace(ex);
                     }
                 }

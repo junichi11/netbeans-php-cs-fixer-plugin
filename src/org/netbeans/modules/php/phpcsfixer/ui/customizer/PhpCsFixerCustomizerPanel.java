@@ -43,7 +43,6 @@ package org.netbeans.modules.php.phpcsfixer.ui.customizer;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.phpcsfixer.preferences.PhpCsFixerPreferences;
@@ -60,12 +59,18 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
     private final PhpModule phpModule;
     private boolean isGlobal;
     private boolean isProject;
+    private int version;
+    // 1.x
     private boolean useLevel;
     private String level;
     private boolean useConfig;
     private String config;
     private boolean useFixers;
     private String fixers;
+    // 2.x
+    private boolean useRules;
+    private String rules;
+    // common
     private boolean useCustom;
     private String custom;
     private boolean isRunOnSave;
@@ -76,11 +81,8 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
      * Creates new form PhpCsFixerCustomizerPanel
      */
     public PhpCsFixerCustomizerPanel(Category catetgory, PhpModule phpModule) {
-        catetgory.setOkButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                save();
-            }
+        catetgory.setOkButtonListener((ActionEvent e) -> {
+            save();
         });
         this.catetgory = catetgory;
         this.phpModule = phpModule;
@@ -102,6 +104,11 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
                 PhpCsFixerPreferences.setGlobal(phpModule, isGlobal());
                 PhpCsFixerPreferences.setProject(phpModule, isProject());
             }
+            if (version != optionsPanel.getVersion()) {
+                PhpCsFixerPreferences.setVersion(phpModule, optionsPanel.getVersion());
+            }
+
+            // 1.x
             if (useLevel != optionsPanel.useLevel()) {
                 PhpCsFixerPreferences.setLevel(phpModule, optionsPanel.useLevel());
             }
@@ -120,6 +127,16 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
             if (!fixers.equals(optionsPanel.getFixers())) {
                 PhpCsFixerPreferences.setFixers(phpModule, optionsPanel.getFixers());
             }
+
+            // 2.x
+            if (useRules != optionsPanel.useRules()) {
+                PhpCsFixerPreferences.setRules(phpModule, optionsPanel.useRules());
+            }
+            if (!rules.equals(optionsPanel.getRules())) {
+                PhpCsFixerPreferences.setRules(phpModule, optionsPanel.getRules());
+            }
+
+            // common
             if (useCustom != optionsPanel.useCustom()) {
                 PhpCsFixerPreferences.setCustom(phpModule, optionsPanel.useCustom());
             }
@@ -151,12 +168,18 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
     private void load() {
         isGlobal = PhpCsFixerPreferences.useGlobal(phpModule);
         isProject = PhpCsFixerPreferences.useProject(phpModule);
+
+        version = PhpCsFixerPreferences.getVersion(phpModule);
         useLevel = PhpCsFixerPreferences.useLevel(phpModule);
         level = PhpCsFixerPreferences.getLevel(phpModule);
         useConfig = PhpCsFixerPreferences.useConfig(phpModule);
         config = PhpCsFixerPreferences.getConfig(phpModule);
         useFixers = PhpCsFixerPreferences.useFixers(phpModule);
         fixers = PhpCsFixerPreferences.getFixers(phpModule);
+        // 2.x
+        useRules = PhpCsFixerPreferences.useRules(phpModule);
+        rules = PhpCsFixerPreferences.getRules(phpModule);
+        // common
         useCustom = PhpCsFixerPreferences.useCustom(phpModule);
         custom = PhpCsFixerPreferences.getCustom(phpModule);
         isRunOnSave = PhpCsFixerPreferences.isRunOnSave(phpModule);
@@ -165,13 +188,20 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
         // global, project
         useGlobalRadioButton.setSelected(isGlobal);
         useProjectRadioButton.setSelected(isProject);
+
         // options
+        optionsPanel.setVersion(version);
+        // 1.x
         optionsPanel.setLevel(useLevel);
         optionsPanel.setLevel(level);
         optionsPanel.setConfig(useConfig);
         optionsPanel.setConfig(config);
         optionsPanel.setFixers(useFixers);
         optionsPanel.setFixers(fixers);
+        // 2.x
+        optionsPanel.setRules(useRules);
+        optionsPanel.setRules(rules);
+        // common
         optionsPanel.setCustom(useCustom);
         optionsPanel.setCustom(custom);
         optionsPanel.setRunOnSave(isRunOnSave);

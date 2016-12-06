@@ -59,6 +59,7 @@ public final class PhpCsFixerOptions {
     private static final PhpCsFixerOptions INSTANCE = new PhpCsFixerOptions();
     private static final String PREFERENCES_PATH = "php-cs-fixer"; // NOI18N
     private static final String PHP_CS_FIXER_PATH = "php-cs-fixer.path"; // NOI18N
+    private static final String PHP_CS_FIXER_VERSION = "php-cs-fixer.version"; // NOI18N
     private static final String RUN_ON_SAVE = "run.on.save"; // NOI18N
     // php-cs-fixer options
     private static final String USE_LEVEL = "use.level"; // NOI18N
@@ -67,11 +68,17 @@ public final class PhpCsFixerOptions {
     private static final String CONFIG = "config"; // NOI18N
     private static final String USE_FIXERS = "use.fixers"; // NOI18N
     private static final String FIXERS = "fixers"; // NOI18N
+    // 2.x
+    private static final String USE_RULES = "use.rules"; // NOI18N
+    private static final String RULES = "rules"; // NOI18N
+    // common
     private static final String USE_CUSTOM = "use.custom"; // NOI18N
     private static final String CUSTOM = "custom"; // NOI18N
     private static final String VERBOSE = "verbose"; // NOI18N
     private static final String DIFF = "diff"; // NOI18N
     private volatile boolean phpcsfixerSearched = false;
+
+    public static final int LATEST_VERSION = 2;
 
     private PhpCsFixerOptions() {
     }
@@ -107,6 +114,19 @@ public final class PhpCsFixerOptions {
         getPreferences().put(PHP_CS_FIXER_PATH, path);
     }
 
+    public int getVersion() {
+        int version = getPreferences().getInt(PHP_CS_FIXER_VERSION, 1);
+        if (version <= 0 || LATEST_VERSION < version) {
+            version = LATEST_VERSION;
+        }
+        return version;
+    }
+
+    public void setVersion(int version) {
+        getPreferences().putInt(PHP_CS_FIXER_VERSION, version);
+    }
+
+    // version 1.x
     public boolean useLevel() {
         return getPreferences().getBoolean(USE_LEVEL, false);
     }
@@ -155,6 +175,24 @@ public final class PhpCsFixerOptions {
         getPreferences().put(FIXERS, fixers);
     }
 
+    // 2.x
+    public boolean useRules() {
+        return getPreferences().getBoolean(USE_RULES, false);
+    }
+
+    public void setRules(boolean use) {
+        getPreferences().putBoolean(USE_RULES, use);
+    }
+
+    public String getRules() {
+        return getPreferences().get(RULES, ""); // NOI18N
+    }
+
+    public void setRules(String rules) {
+        getPreferences().put(RULES, rules);
+    }
+
+    // common
     public boolean useCustom() {
         return getPreferences().getBoolean(USE_CUSTOM, false);
     }
@@ -196,15 +234,21 @@ public final class PhpCsFixerOptions {
     }
 
     public List<String> getAllOptions() {
-        List<String> all = new ArrayList<String>();
-        if (useLevel() && !getLevel().isEmpty()) {
-            all.add(String.format(PhpCsFixer.LEVEL_PARAM, getLevel()));
-        }
-        if (useConfig() && !getConfig().isEmpty()) {
-            all.add(String.format(PhpCsFixer.CONFIG_PARAM, getConfig()));
-        }
-        if (useFixers() && !getFixers().isEmpty()) {
-            all.add(String.format(PhpCsFixer.FIXERS_PARAM, getFixers()));
+        List<String> all = new ArrayList<>();
+        if (getVersion() == 2) {
+            if (useRules() && !getRules().isEmpty()) {
+                all.add(String.format(PhpCsFixer.RULES_PARAM, getRules()));
+            }
+        } else {
+            if (useLevel() && !getLevel().isEmpty()) {
+                all.add(String.format(PhpCsFixer.LEVEL_PARAM, getLevel()));
+            }
+            if (useConfig() && !getConfig().isEmpty()) {
+                all.add(String.format(PhpCsFixer.CONFIG_PARAM, getConfig()));
+            }
+            if (useFixers() && !getFixers().isEmpty()) {
+                all.add(String.format(PhpCsFixer.FIXERS_PARAM, getFixers()));
+            }
         }
         if (useCustom() && !getCustom().isEmpty()) {
             all.add(getCustom());

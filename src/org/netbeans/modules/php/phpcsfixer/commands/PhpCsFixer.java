@@ -73,9 +73,12 @@ public final class PhpCsFixer {
     private static final String SELF_UPDATE_COMMAND = "self-update"; // NOI18N
     //parameters
     public static final String DRY_RUN_PARAM = "--dry-run"; // NOI18N
+    // 1.x
     public static final String CONFIG_PARAM = "--config=%s"; // NOI18N
     public static final String LEVEL_PARAM = "--level=%s"; // NOI18N
     public static final String FIXERS_PARAM = "--fixers=%s"; // NOI18N
+    // 2.x
+    public static final String RULES_PARAM = "--rules=%s"; // NOI18N
     private static final List<String> DEFAULT_PARAMS = Arrays.asList(
             "--ansi", // NOI18N
             "--no-interaction"); // NOI18N
@@ -107,7 +110,7 @@ public final class PhpCsFixer {
     }
 
     public Future<Integer> fixDryRun(PhpModule phpModule, String... params) {
-        List<String> allParams = new ArrayList<String>(params.length + 1);
+        List<String> allParams = new ArrayList<>(params.length + 1);
         allParams.addAll(Arrays.asList(params));
         allParams.add(DRY_RUN_PARAM);
         return runCommand(phpModule, FIX_COMMAND, Bundle.PhpCsFixer_run(FIX_COMMAND + " " + DRY_RUN_PARAM), allParams);
@@ -132,7 +135,7 @@ public final class PhpCsFixer {
     }
 
     private List<String> mergeParameters(String command, List<String> defaultParams, List<String> params) {
-        List<String> allParams = new ArrayList<String>(defaultParams.size() + params.size() + 1);
+        List<String> allParams = new ArrayList<>(defaultParams.size() + params.size() + 1);
         allParams.add(command);
         allParams.addAll(params);
         allParams.addAll(defaultParams);
@@ -160,13 +163,9 @@ public final class PhpCsFixer {
         if (phpModule != null) {
             final FileObject sourceDirectory = phpModule.getSourceDirectory();
             if (sourceDirectory != null) {
-                descriptor = descriptor
-                        .postExecution(new Runnable() {
-                    @Override
-                    public void run() {
-                        // refresh sources after running command
-                        sourceDirectory.refresh();
-                    }
+                descriptor = descriptor.postExecution(() -> {
+                    // refresh sources after running command
+                    sourceDirectory.refresh();
                 });
             }
         }

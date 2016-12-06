@@ -90,7 +90,7 @@ public abstract class PhpCsFixerBaseAction extends AbstractAction {
 
     private List<String> getOptions() {
         PhpModule phpModule = PhpModule.Factory.inferPhpModule();
-        List<String> options = new ArrayList<String>();
+        List<String> options = new ArrayList<>();
         if (phpModule == null) {
             return options;
         }

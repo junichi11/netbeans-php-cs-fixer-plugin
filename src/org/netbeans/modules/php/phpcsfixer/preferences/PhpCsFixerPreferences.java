@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.prefs.Preferences;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
+import static org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions.LATEST_VERSION;
 
 /**
  *
@@ -57,6 +58,8 @@ public final class PhpCsFixerPreferences {
     private static final String USE_PROJECT = "use-project"; // NOI18N
     private static final String RUN_ON_SAVE = "run-on-save"; // NOI18N
     // php-cs-fixer options
+    private static final String VERSION = "version"; // NOI18N
+    // 1.x
     private static final String USE_LEVEL = "use-level"; // NOI18N
     private static final String LEVEL = "level"; // NOI18N
     private static final String USE_CONFIG = "use-config"; // NOI18N
@@ -64,6 +67,10 @@ public final class PhpCsFixerPreferences {
     private static final String USE_FIXERS = "use-fixers"; // NOI18N
     private static final String FIXERS = "fixers"; // NOI18N
     private static final String USE_CUSTOM = "use-custom"; // NOI18N
+    // 2.x
+    private static final String USE_RULES = "use-rules"; // NOI18N
+    private static final String RULES = "rules"; // NOI18N
+    // common
     private static final String CUSTOM = "custom"; // NOI18N
     private static final String VERBOSE = "verbose"; // NOI18N
     private static final String DIFF = "diff"; // NOI18N
@@ -87,6 +94,19 @@ public final class PhpCsFixerPreferences {
         getPreferences(phpModule).putBoolean(USE_PROJECT, use);
     }
 
+    public static int getVersion(PhpModule phpModule) {
+        int version = getPreferences(phpModule).getInt(VERSION, 1);
+        if (version <= 0 || LATEST_VERSION < version) {
+            version = LATEST_VERSION;
+        }
+        return version;
+    }
+
+    public static void setVersion(PhpModule phpModule, int version) {
+        getPreferences(phpModule).putInt(VERSION, version);
+    }
+
+    // 1.x
     public static boolean useLevel(PhpModule phpModule) {
         return getPreferences(phpModule).getBoolean(USE_LEVEL, false);
     }
@@ -135,6 +155,23 @@ public final class PhpCsFixerPreferences {
         getPreferences(phpModule).put(FIXERS, fixers);
     }
 
+    // 2.x
+    public static boolean useRules(PhpModule phpModule) {
+        return getPreferences(phpModule).getBoolean(USE_RULES, false);
+    }
+
+    public static void setRules(PhpModule phpModule, boolean use) {
+        getPreferences(phpModule).putBoolean(USE_RULES, use);
+    }
+
+    public static String getRules(PhpModule phpModule) {
+        return getPreferences(phpModule).get(RULES, ""); // NOI18N
+    }
+
+    public static void setRules(PhpModule phpModule, String rules) {
+        getPreferences(phpModule).put(RULES, rules);
+    }
+
     public static boolean useCustom(PhpModule phpModule) {
         return getPreferences(phpModule).getBoolean(USE_CUSTOM, false);
     }
@@ -176,20 +213,25 @@ public final class PhpCsFixerPreferences {
     }
 
     public static List<String> getAllOptions(PhpModule phpModule) {
-        List<String> all = new ArrayList<String>();
-        if (useLevel(phpModule) && !getLevel(phpModule).isEmpty()) {
-            all.add(String.format(PhpCsFixer.LEVEL_PARAM, getLevel(phpModule)));
-        }
-        if (useConfig(phpModule) && !getConfig(phpModule).isEmpty()) {
-            all.add(String.format(PhpCsFixer.CONFIG_PARAM, getConfig(phpModule)));
-        }
-        if (useFixers(phpModule) && !getFixers(phpModule).isEmpty()) {
-            all.add(String.format(PhpCsFixer.FIXERS_PARAM, getFixers(phpModule)));
+        List<String> all = new ArrayList<>();
+        if (getVersion(phpModule) == 2) {
+            if (useRules(phpModule) && !getRules(phpModule).isEmpty()) {
+                all.add(String.format(PhpCsFixer.RULES_PARAM, getRules(phpModule)));
+            }
+        } else {
+            if (useLevel(phpModule) && !getLevel(phpModule).isEmpty()) {
+                all.add(String.format(PhpCsFixer.LEVEL_PARAM, getLevel(phpModule)));
+            }
+            if (useConfig(phpModule) && !getConfig(phpModule).isEmpty()) {
+                all.add(String.format(PhpCsFixer.CONFIG_PARAM, getConfig(phpModule)));
+            }
+            if (useFixers(phpModule) && !getFixers(phpModule).isEmpty()) {
+                all.add(String.format(PhpCsFixer.FIXERS_PARAM, getFixers(phpModule)));
+            }
         }
         if (useCustom(phpModule) && !getCustom(phpModule).isEmpty()) {
             all.add(getCustom(phpModule));
         }
-
         return all;
     }
 
