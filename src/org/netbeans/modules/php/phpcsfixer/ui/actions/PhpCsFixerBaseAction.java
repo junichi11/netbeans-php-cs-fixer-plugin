@@ -44,6 +44,8 @@ package org.netbeans.modules.php.phpcsfixer.ui.actions;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import static javax.swing.Action.NAME;
 import static javax.swing.Action.SHORT_DESCRIPTION;
@@ -52,7 +54,6 @@ import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions;
 import org.netbeans.modules.php.phpcsfixer.preferences.PhpCsFixerPreferences;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -61,6 +62,7 @@ import org.openide.util.Exceptions;
 public abstract class PhpCsFixerBaseAction extends AbstractAction {
 
     private static final long serialVersionUID = -8856272088582157210L;
+    private static final Logger LOGGER = Logger.getLogger(PhpCsFixerBaseAction.class.getName());
 
     public PhpCsFixerBaseAction() {
         putValue("noIconInMenu", true); // NOI18N
@@ -83,8 +85,7 @@ public abstract class PhpCsFixerBaseAction extends AbstractAction {
         try {
             runCommand(phpModule, getOptions());
         } catch (InvalidPhpExecutableException ex) {
-            // TODO implement
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING, null, ex);
         }
     }
 

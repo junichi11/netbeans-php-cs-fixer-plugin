@@ -75,6 +75,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private String rules;
     // common
     private boolean useCustom;
+    private boolean showOutputWindow;
     private boolean isRunOnSave;
     private boolean isVerbose;
     private boolean isDiff;
@@ -99,6 +100,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         phpCsFixerNameLabel = new javax.swing.JLabel();
         optionsPanel = new org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanel();
         downloadButton = new javax.swing.JButton();
+        showOutputWindowCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(pathLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.pathLabel.text")); // NOI18N
 
@@ -120,6 +122,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(showOutputWindowCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.showOutputWindowCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -127,18 +131,23 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pathLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(phpCsFixerNameLabel)
-                        .addGap(0, 12, Short.MAX_VALUE))
+                        .addComponent(pathLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(phpCsFixerNameLabel)
+                                .addGap(0, 12, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(pathTextField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(downloadButton))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pathTextField)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(downloadButton)))
+                        .addComponent(showOutputWindowCheckBox)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -152,6 +161,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                     .addComponent(downloadButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(phpCsFixerNameLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(showOutputWindowCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -226,8 +237,11 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     void load() {
         PhpCsFixerOptions options = getOptions();
         setPath(options.getPhpCsFixerPath());
+        setShowOutputWindow(options.showOutputWindow());
 
+        // original options
         version = options.getVersion();
+        showOutputWindow = options.showOutputWindow();
 
         // 1.x
         useLevel = options.useLevel();
@@ -278,6 +292,11 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         } else {
             options.setPhpCsFixerPath(""); // NOI18N
         }
+
+        if (showOutputWindow != showOutputWindow()) {
+            options.setShowOutputWindow(showOutputWindow());
+        }
+
         if (version != optionsPanel.getVersion()) {
             options.setVersion(optionsPanel.getVersion());
         }
@@ -337,6 +356,14 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         return pathTextField.getText();
     }
 
+    public void setShowOutputWindow(boolean show) {
+        showOutputWindowCheckBox.setSelected(show);
+    }
+
+    public boolean showOutputWindow() {
+        return showOutputWindowCheckBox.isSelected();
+    }
+
     boolean valid() {
         // TODO check whether form is consistent and complete
         String path = pathTextField.getText();
@@ -350,6 +377,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel pathLabel;
     private javax.swing.JTextField pathTextField;
     private javax.swing.JLabel phpCsFixerNameLabel;
+    private javax.swing.JCheckBox showOutputWindowCheckBox;
     // End of variables declaration//GEN-END:variables
 
     private static class FileFilterImpl extends FileFilter {
