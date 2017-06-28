@@ -56,6 +56,7 @@ import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanelControl
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
+import org.openide.windows.InputOutput;
 
 /**
  * @see https://github.com/FriendsOfPHP/PHP-CS-Fixer
@@ -68,6 +69,7 @@ public final class PhpCsFixer {
     public static final String NAME_LONG = NAME + ".phar"; // NOI18N
     public static final String DOWNLOAD_URL = "http://get.sensiolabs.org/php-cs-fixer.phar"; // NOI18N
     private final String phpcsfixerPath;
+    private boolean isDryRun;
     // commands
     private static final String FIX_COMMAND = "fix"; // NOI18N
     private static final String SELF_UPDATE_COMMAND = "self-update"; // NOI18N
@@ -83,8 +85,20 @@ public final class PhpCsFixer {
             "--ansi", // NOI18N
             "--no-interaction"); // NOI18N
 
+    private static final ExecutionDescriptor DEFAULT_EXECUTION_DESCRIPTOR = new ExecutionDescriptor()
+            .optionsPath(PhpCsFixerOptionsPanelController.getOptionsPath())
+            .controllable(true)
+            .frontWindow(true)
+            .frontWindowOnError(true)
+            .inputVisible(false)
+            .showProgress(true);
+
+    private static final ExecutionDescriptor NO_OUTPUT_EXECUTION_DESCRIPTOR = new ExecutionDescriptor()
+            .inputOutput(InputOutput.NULL);
+
     public PhpCsFixer(String phpcsfixerPath) {
         this.phpcsfixerPath = phpcsfixerPath;
+        isDryRun = false;
     }
 
     public static PhpCsFixer getDefault() throws InvalidPhpExecutableException {
@@ -110,6 +124,7 @@ public final class PhpCsFixer {
     }
 
     public Future<Integer> fixDryRun(PhpModule phpModule, String... params) {
+        isDryRun = true;
         List<String> allParams = new ArrayList<>(params.length + 1);
         allParams.addAll(Arrays.asList(params));
         allParams.add(DRY_RUN_PARAM);
@@ -157,9 +172,13 @@ public final class PhpCsFixer {
     }
 
     private ExecutionDescriptor getDescriptor(PhpModule phpModule) {
-        ExecutionDescriptor descriptor = PhpExecutable.DEFAULT_EXECUTION_DESCRIPTOR
-                .optionsPath(PhpCsFixerOptionsPanelController.getOptionsPath())
-                .inputVisible(false);
+        ExecutionDescriptor descriptor;
+        if (PhpCsFixerOptions.getInstance().showOutputWindow() || isDryRun) {
+            descriptor = DEFAULT_EXECUTION_DESCRIPTOR;
+        } else {
+            descriptor = NO_OUTPUT_EXECUTION_DESCRIPTOR;
+        }
+        descriptor = descriptor.postExecution(() -> {});
         if (phpModule != null) {
             final FileObject sourceDirectory = phpModule.getSourceDirectory();
             if (sourceDirectory != null) {

@@ -76,6 +76,7 @@ public final class PhpCsFixerOptions {
     private static final String CUSTOM = "custom"; // NOI18N
     private static final String VERBOSE = "verbose"; // NOI18N
     private static final String DIFF = "diff"; // NOI18N
+    private static final String SHOW_OUTPUT_WINDOW = "show.output.window"; // NOI18N
     private volatile boolean phpcsfixerSearched = false;
 
     public static final int LATEST_VERSION = 2;
@@ -231,6 +232,14 @@ public final class PhpCsFixerOptions {
 
     public void setDiff(boolean isDiff) {
         getPreferences().putBoolean(DIFF, isDiff);
+    }
+
+    public boolean showOutputWindow() {
+        return getPreferences().getBoolean(SHOW_OUTPUT_WINDOW, true);
+    }
+
+    public void setShowOutputWindow(boolean show) {
+        getPreferences().putBoolean(SHOW_OUTPUT_WINDOW, show);
     }
 
     public List<String> getAllOptions() {
