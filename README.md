@@ -45,8 +45,9 @@ https://github.com/FriendsOfPHP/PHP-CS-Fixer
 
 http://plugins.netbeans.org/plugin/49042/php-cs-fixer
 
-## TODO
-- add run on save feature (not yet). This feature has a problem (#2).
+## NOTE
+
+- Run on save feature may not work somethimes. Now after 1 second, the command is run. But I have another idea at the moment, sorry.
 
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)

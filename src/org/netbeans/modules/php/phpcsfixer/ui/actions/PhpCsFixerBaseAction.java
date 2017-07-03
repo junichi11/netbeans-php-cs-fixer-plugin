@@ -54,6 +54,7 @@ import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions;
 import org.netbeans.modules.php.phpcsfixer.preferences.PhpCsFixerPreferences;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -76,6 +77,8 @@ public abstract class PhpCsFixerBaseAction extends AbstractAction {
 
     protected abstract void runCommand(PhpModule phpModule, List<String> options) throws InvalidPhpExecutableException;
 
+    protected abstract void runCommand(PhpModule phpModule, List<String> options, FileObject targetFile) throws InvalidPhpExecutableException;
+
     @Override
     public void actionPerformed(ActionEvent e) {
         PhpModule phpModule = PhpModule.Factory.inferPhpModule();
@@ -84,6 +87,18 @@ public abstract class PhpCsFixerBaseAction extends AbstractAction {
         }
         try {
             runCommand(phpModule, getOptions());
+        } catch (InvalidPhpExecutableException ex) {
+            LOGGER.log(Level.WARNING, null, ex);
+        }
+    }
+
+    public void actionPerformed(ActionEvent e, FileObject targetFile) {
+        PhpModule phpModule = PhpModule.Factory.forFileObject(targetFile);
+        if (phpModule == null) {
+            return;
+        }
+        try {
+            runCommand(phpModule, getOptions(), targetFile);
         } catch (InvalidPhpExecutableException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }

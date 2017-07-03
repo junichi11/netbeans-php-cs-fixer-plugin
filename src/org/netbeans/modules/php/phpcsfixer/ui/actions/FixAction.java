@@ -86,15 +86,20 @@ public class FixAction extends PhpCsFixerBaseAction {
     @Override
     protected void runCommand(PhpModule phpModule, List<String> options) throws InvalidPhpExecutableException {
         for (FileObject target : getTargetFiles()) {
-            List<String> params = getAllParams(target, options);
-            if (!params.isEmpty()) {
-                Future<Integer> result = PhpCsFixer.getDefault().fix(phpModule, params.toArray(new String[0]));
-                if (result != null) {
-                    try {
-                        result.get();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+            runCommand(phpModule, options, target);
+        }
+    }
+
+    @Override
+    public void runCommand(PhpModule phpModule, List<String> options, FileObject targetFile) throws InvalidPhpExecutableException {
+        List<String> params = getAllParams(targetFile, options);
+        if (!params.isEmpty()) {
+            Future<Integer> result = PhpCsFixer.getDefault().fix(phpModule, params.toArray(new String[0]));
+            if (result != null) {
+                try {
+                    result.get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
         }
@@ -119,7 +124,7 @@ public class FixAction extends PhpCsFixerBaseAction {
             return Collections.emptyList();
         }
 
-        List<String> params = new ArrayList<String>(Collections.singletonList(targetPath));
+        List<String> params = new ArrayList<>(Collections.singletonList(targetPath));
         params.addAll(options);
         return params;
     }
