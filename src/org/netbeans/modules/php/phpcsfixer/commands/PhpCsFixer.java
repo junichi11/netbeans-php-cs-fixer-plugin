@@ -46,6 +46,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.executable.PhpExecutable;
@@ -95,6 +97,7 @@ public final class PhpCsFixer {
 
     private static final ExecutionDescriptor NO_OUTPUT_EXECUTION_DESCRIPTOR = new ExecutionDescriptor()
             .inputOutput(InputOutput.NULL);
+    private static final Logger LOGGER = Logger.getLogger(PhpCsFixer.class.getName());
 
     public PhpCsFixer(String phpcsfixerPath) {
         this.phpcsfixerPath = phpcsfixerPath;
@@ -105,6 +108,7 @@ public final class PhpCsFixer {
         String phpcsfixerPath = PhpCsFixerOptions.getInstance().getPhpCsFixerPath();
         String warning = validate(phpcsfixerPath);
         if (warning != null) {
+            LOGGER.log(Level.WARNING, "PHP CS Fixer path is not set."); // NOI18N
             throw new InvalidPhpExecutableException(warning);
         }
         return new PhpCsFixer(phpcsfixerPath);

@@ -41,19 +41,21 @@
  */
 package org.netbeans.modules.php.phpcsfixer.onsave;
 
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions;
 import org.netbeans.modules.php.phpcsfixer.preferences.PhpCsFixerPreferences;
 import org.netbeans.modules.php.phpcsfixer.ui.actions.FixAction;
 import org.netbeans.spi.editor.document.OnSaveTask;
-import org.openide.filesystems.FileChangeAdapter;
-import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -62,6 +64,7 @@ import org.openide.filesystems.FileObject;
 public final class PhpCsFixerOnSaveTask implements OnSaveTask {
 
     private final Context context;
+    private static final RequestProcessor RP = new RequestProcessor(PhpCsFixerOnSaveTask.class);
     private static final Logger LOGGER = Logger.getLogger(PhpCsFixerOnSaveTask.class.getName());
 
     private PhpCsFixerOnSaveTask(Context context) {
@@ -72,7 +75,7 @@ public final class PhpCsFixerOnSaveTask implements OnSaveTask {
     public void performTask() {
         String path = PhpCsFixerOptions.getInstance().getPhpCsFixerPath();
         if (StringUtils.isEmpty(path)) {
-            LOGGER.log(Level.WARNING, "Not found : PHP CS Fixer (Please, set PHP CS Fixer path to Options)");
+            LOGGER.log(Level.WARNING, "Not found : PHP CS Fixer (Please, set PHP CS Fixer path to Options)"); // NOI18N
             return;
         }
         Document document = context.getDocument();
@@ -90,19 +93,13 @@ public final class PhpCsFixerOnSaveTask implements OnSaveTask {
                 return;
             }
 
-            // FIXME
-            // command is run but editor is not reload
-            // add FileChangeListener
-            fileObject.addFileChangeListener(new FileChangeAdapter() {
-                @Override
-                public void fileChanged(FileEvent fe) {
-                    FileObject file = fe.getFile();
-                    FixAction fixAction = new FixAction();
-                    fixAction.actionPerformed(null);
-                    file.removeFileChangeListener(this);
-                    file.refresh();
-                }
-            });
+            // XXX Run command after 1 second
+            // Somethimes it may not work
+            RP.schedule(() -> {
+                FixAction fixAction = new FixAction();
+                fixAction.actionPerformed(null, fileObject);
+                LOGGER.log(Level.FINE, "Run php-cs-fixer: {0}", fileObject.getNameExt()); // NOI18N
+            }, 1000, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -116,7 +113,7 @@ public final class PhpCsFixerOnSaveTask implements OnSaveTask {
         return true;
     }
 
-//    @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = OnSaveTask.Factory.class, position = 1100)
+    @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = OnSaveTask.Factory.class, position = 5000)
     public static final class FactoryImpl implements Factory {
 
         @Override

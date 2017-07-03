@@ -60,9 +60,6 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
     public PhpCsFixerOptionsPanel() {
         initComponents();
         init();
-        // TODO see issue #2
-        // hide run on save option
-        runOnSaveCheckBox.setVisible(false);
     }
 
     private void init() {

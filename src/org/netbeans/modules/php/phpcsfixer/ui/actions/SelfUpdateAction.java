@@ -45,6 +45,7 @@ import java.util.List;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
+import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
@@ -63,6 +64,11 @@ public class SelfUpdateAction extends PhpCsFixerBaseAction {
 
     @Override
     protected void runCommand(PhpModule phpModule, List<String> options) throws InvalidPhpExecutableException {
+        PhpCsFixer.getDefault().selfUpdate(phpModule);
+    }
+
+    @Override
+    protected void runCommand(PhpModule phpModule, List<String> options, FileObject targetFile) throws InvalidPhpExecutableException {
         PhpCsFixer.getDefault().selfUpdate(phpModule);
     }
 }
