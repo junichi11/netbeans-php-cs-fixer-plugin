@@ -107,14 +107,11 @@ public abstract class PhpCsFixerBaseAction extends AbstractAction {
     private List<String> getOptions() {
         PhpModule phpModule = PhpModule.Factory.inferPhpModule();
         List<String> options = new ArrayList<>();
-        if (phpModule == null) {
-            return options;
-        }
         boolean isDryRun = isDryRun();
         boolean isVerbose;
         boolean isDiff;
 
-        if (PhpCsFixerPreferences.useGlobal(phpModule)) {
+        if (phpModule == null || PhpCsFixerPreferences.useGlobal(phpModule)) {
             // use global
             PhpCsFixerOptions instance = PhpCsFixerOptions.getInstance();
             options.addAll(instance.getAllOptions());
