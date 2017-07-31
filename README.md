@@ -53,7 +53,8 @@ https://github.com/FriendsOfPHP/PHP-CS-Fixer
 
 ## Download
 
-http://plugins.netbeans.org/plugin/49042/php-cs-fixer
+- http://plugins.netbeans.org/plugin/49042/php-cs-fixer
+- https://github.com/junichi11/netbeans-php-cs-fixer-plugin/releases
 
 ## NOTE
 

@@ -84,7 +84,7 @@ public final class PhpCsFixerOnSaveTask implements OnSaveTask {
             // check run on save option
             boolean isRunOnSave;
             final PhpModule phpModule = PhpModule.Factory.forFileObject(fileObject);
-            if (PhpCsFixerPreferences.useProject(phpModule)) {
+            if (phpModule != null && PhpCsFixerPreferences.useProject(phpModule)) {
                 isRunOnSave = PhpCsFixerPreferences.isRunOnSave(phpModule);
             } else {
                 isRunOnSave = PhpCsFixerOptions.getInstance().isRunOnSave();
