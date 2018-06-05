@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
@@ -55,12 +56,14 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 final class PhpCsFixerPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 8727885479187122174L;
     private final PhpCsFixerOptionsPanelController controller;
     private static final String PHPCSFIXER_LAST_FOLDER_SUFFIX = ".phpcsfixer"; // NOI18N
+    private static final RequestProcessor RP = new RequestProcessor(PhpCsFixerPanel.class);
 
     private int version;
     // 1.x
@@ -85,6 +88,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     PhpCsFixerPanel(PhpCsFixerOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
+        setVersion(""); // NOI18N
     }
 
     /**
@@ -102,6 +106,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         optionsPanel = new org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanel();
         downloadButton = new javax.swing.JButton();
         showOutputWindowCheckBox = new javax.swing.JCheckBox();
+        versionLabel = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(pathLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.pathLabel.text")); // NOI18N
 
@@ -125,6 +130,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(showOutputWindowCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.showOutputWindowCheckBox.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(versionLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.versionLabel.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -147,7 +154,9 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(downloadButton))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(showOutputWindowCheckBox)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(showOutputWindowCheckBox)
+                            .addComponent(versionLabel))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -163,6 +172,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(phpCsFixerNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(versionLabel)
+                .addGap(5, 5, 5)
                 .addComponent(showOutputWindowCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -356,10 +367,27 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
     public void setPath(String path) {
         pathTextField.setText(path);
+        // set version
+        if (!StringUtils.isEmpty(path)) {
+            RP.post(() -> {
+                String ver = new PhpCsFixer(path).getVersion();
+                SwingUtilities.invokeLater(() -> setVersion(ver));
+            });
+        } else {
+            setVersion(""); // NOI18N
+        }
     }
 
     public String getPath() {
         return pathTextField.getText();
+    }
+
+    public void setVersion(String version) {
+        versionLabel.setText(String.format("<html><b>%s</b></html>", version)); // NOI18N
+    }
+
+    public String getVersion() {
+        return versionLabel.getText();
     }
 
     public void setShowOutputWindow(boolean show) {
@@ -384,6 +412,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private javax.swing.JTextField pathTextField;
     private javax.swing.JLabel phpCsFixerNameLabel;
     private javax.swing.JCheckBox showOutputWindowCheckBox;
+    private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 
     private static class FileFilterImpl extends FileFilter {

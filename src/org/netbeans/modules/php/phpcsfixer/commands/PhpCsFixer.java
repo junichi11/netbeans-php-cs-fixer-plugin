@@ -45,10 +45,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
+import org.netbeans.api.extexecution.base.input.InputProcessor;
+import org.netbeans.api.extexecution.base.input.InputProcessors;
+import org.netbeans.api.extexecution.base.input.LineProcessor;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.executable.PhpExecutable;
 import org.netbeans.modules.php.api.executable.PhpExecutableValidator;
@@ -57,6 +61,7 @@ import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions;
 import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanelController;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.InputOutput;
 
@@ -76,6 +81,7 @@ public final class PhpCsFixer {
     private static final String FIX_COMMAND = "fix"; // NOI18N
     private static final String SELF_UPDATE_COMMAND = "self-update"; // NOI18N
     //parameters
+    private static final String VERSION_PARAM = "--version"; // NOI18N
     public static final String DRY_RUN_PARAM = "--dry-run"; // NOI18N
     public static final String VERBOSE_PARAM = "--verbose"; // NOI18N
     public static final String DIFF_PARAM = "--diff"; // NOI18N
@@ -142,6 +148,28 @@ public final class PhpCsFixer {
         return runCommand(phpModule, SELF_UPDATE_COMMAND, Bundle.PhpCsFixer_run(SELF_UPDATE_COMMAND));
     }
 
+    /**
+     * Get version.
+     *
+     * @return version
+     */
+    public String getVersion() {
+        DefaultLineProcessor lineProcessor = new DefaultLineProcessor();
+        Future<Integer> result = getPhpExecutable(null, "version")
+                .additionalParameters(Arrays.asList(VERSION_PARAM))
+                .run(NO_OUTPUT_EXECUTION_DESCRIPTOR, getOutputProcessorFactory(lineProcessor));
+        try {
+            if (result != null) {
+                result.get();
+            }
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return lineProcessor.getResult();
+    }
+
     private Future<Integer> runCommand(PhpModule phpModule, String command, String title) {
         return runCommand(phpModule, command, title, Collections.<String>emptyList());
     }
@@ -196,5 +224,46 @@ public final class PhpCsFixer {
             }
         }
         return descriptor;
+    }
+
+    /**
+     * Get InputProcessorFactory.
+     *
+     * @param lineProcessor
+     * @return InputProcessorFactory
+     */
+    private ExecutionDescriptor.InputProcessorFactory2 getOutputProcessorFactory(final LineProcessor lineProcessor) {
+        return (InputProcessor defaultProcessor) -> InputProcessors.ansiStripping(InputProcessors.bridge(lineProcessor));
+    }
+
+    private static class DefaultLineProcessor implements LineProcessor {
+
+        private final StringBuilder result = new StringBuilder();
+        private final List<String> list = new ArrayList<>();
+
+        @Override
+        public void processLine(String line) {
+            list.add(line);
+            if (!list.isEmpty()) {
+                result.append("\n"); // NOI18N
+            }
+            result.append(line);
+        }
+
+        @Override
+        public void reset() {
+        }
+
+        @Override
+        public void close() {
+        }
+
+        public String getResult() {
+            return result.toString();
+        }
+
+        public List<String> asLines() {
+            return list;
+        }
     }
 }
