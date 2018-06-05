@@ -210,16 +210,16 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
             // create file
             File file = new File(downloadDirectory, PhpCsFixer.NAME_LONG);
-            try {
-                try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                    URL downloadUrl = new URL(PhpCsFixer.DOWNLOAD_URL);
-                    InputStream inputStream = downloadUrl.openStream();
-                    int data;
-                    while ((data = inputStream.read()) != -1) {
-                        outputStream.write(data);
-                    }
-                    setPath(file.getCanonicalPath());
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                URL downloadUrl = new URL(PhpCsFixer.DOWNLOAD_URL);
+                InputStream inputStream = downloadUrl.openStream();
+                int data;
+                while ((data = inputStream.read()) != -1) {
+                    outputStream.write(data);
                 }
+                setPath(file.getCanonicalPath());
+                // run self-update because it might be an old version
+                new PhpCsFixer(file.getCanonicalPath()).selfUpdate(null);
             } catch (MalformedURLException ex) {
                 if (file.exists()) {
                     file.delete();
