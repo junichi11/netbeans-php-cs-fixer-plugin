@@ -39,6 +39,12 @@ https://github.com/FriendsOfPHP/PHP-CS-Fixer
 `project properties > PHP CS Fixer`
 - If you would like to use settings each projects, please, check `use project settings`
 
+### Customizing Options
+
+If you would like to use some options, please check the custom checkbox, then please add them to it.
+
+e.g. `--cache-file=/path/to/.php_cs.cache`
+
 ## Usage
 
 1. Right-click
