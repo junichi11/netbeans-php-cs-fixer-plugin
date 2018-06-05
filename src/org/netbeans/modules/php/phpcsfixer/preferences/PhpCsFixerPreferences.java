@@ -95,7 +95,7 @@ public final class PhpCsFixerPreferences {
     }
 
     public static int getVersion(PhpModule phpModule) {
-        int version = getPreferences(phpModule).getInt(VERSION, 1);
+        int version = getPreferences(phpModule).getInt(VERSION, 2);
         if (version <= 0 || LATEST_VERSION < version) {
             version = LATEST_VERSION;
         }

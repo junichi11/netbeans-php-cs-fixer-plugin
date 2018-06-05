@@ -116,7 +116,7 @@ public final class PhpCsFixerOptions {
     }
 
     public int getVersion() {
-        int version = getPreferences().getInt(PHP_CS_FIXER_VERSION, 1);
+        int version = getPreferences().getInt(PHP_CS_FIXER_VERSION, 2);
         if (version <= 0 || LATEST_VERSION < version) {
             version = LATEST_VERSION;
         }
