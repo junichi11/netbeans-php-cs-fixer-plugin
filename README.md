@@ -45,6 +45,10 @@ If you would like to use some options, please check the custom checkbox, then pl
 
 e.g. `--cache-file=/path/to/.php_cs.cache`
 
+### Show an output window
+
+If you would like to avoid showing the output window, please uncheck it. (Checked by default)
+
 ## Usage
 
 1. Right-click
