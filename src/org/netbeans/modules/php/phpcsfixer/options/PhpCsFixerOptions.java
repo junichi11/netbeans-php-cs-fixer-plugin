@@ -71,6 +71,7 @@ public final class PhpCsFixerOptions {
     // 2.x
     private static final String USE_RULES = "use.rules"; // NOI18N
     private static final String RULES = "rules"; // NOI18N
+    private static final String DIFF_FORMAT_UDIFF = "diff.format.udiff"; // NOI18N
     // common
     private static final String USE_CUSTOM = "use.custom"; // NOI18N
     private static final String CUSTOM = "custom"; // NOI18N
@@ -232,6 +233,14 @@ public final class PhpCsFixerOptions {
 
     public void setDiff(boolean isDiff) {
         getPreferences().putBoolean(DIFF, isDiff);
+    }
+
+    public boolean isDiffFormatUdiff() {
+        return getPreferences().getBoolean(DIFF_FORMAT_UDIFF, false);
+    }
+
+    public void setDiffFormatUdiff(boolean isUdiff) {
+        getPreferences().putBoolean(DIFF_FORMAT_UDIFF, isUdiff);
     }
 
     public boolean showOutputWindow() {

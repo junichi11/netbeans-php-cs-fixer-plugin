@@ -77,12 +77,15 @@ public final class PhpCsFixer {
     private static final String SELF_UPDATE_COMMAND = "self-update"; // NOI18N
     //parameters
     public static final String DRY_RUN_PARAM = "--dry-run"; // NOI18N
+    public static final String VERBOSE_PARAM = "--verbose"; // NOI18N
+    public static final String DIFF_PARAM = "--diff"; // NOI18N
     // 1.x
     public static final String CONFIG_PARAM = "--config=%s"; // NOI18N
     public static final String LEVEL_PARAM = "--level=%s"; // NOI18N
     public static final String FIXERS_PARAM = "--fixers=%s"; // NOI18N
     // 2.x
     public static final String RULES_PARAM = "--rules=%s"; // NOI18N
+    public static final String DIFF_FORMAT_UDIFF_PARAM = "--diff-format=udiff"; // NOI18N
     private static final List<String> DEFAULT_PARAMS = Arrays.asList(
             "--ansi", // NOI18N
             "--no-interaction"); // NOI18N

@@ -69,6 +69,7 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
     private String fixers;
     // 2.x
     private boolean useRules;
+    private boolean isDiffFormatUdiff;
     private String rules;
     // common
     private boolean useCustom;
@@ -135,6 +136,9 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
             if (!rules.equals(optionsPanel.getRules())) {
                 PhpCsFixerPreferences.setRules(phpModule, optionsPanel.getRules());
             }
+            if (isDiffFormatUdiff != optionsPanel.isDiffFormatUdiff()) {
+                PhpCsFixerPreferences.setDiffFormatUdiff(phpModule, optionsPanel.isDiffFormatUdiff());
+            }
 
             // common
             if (useCustom != optionsPanel.useCustom()) {
@@ -179,6 +183,7 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
         // 2.x
         useRules = PhpCsFixerPreferences.useRules(phpModule);
         rules = PhpCsFixerPreferences.getRules(phpModule);
+        isDiffFormatUdiff = PhpCsFixerPreferences.isDiffFormatUdiff(phpModule);
         // common
         useCustom = PhpCsFixerPreferences.useCustom(phpModule);
         custom = PhpCsFixerPreferences.getCustom(phpModule);
@@ -201,6 +206,7 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
         // 2.x
         optionsPanel.setRules(useRules);
         optionsPanel.setRules(rules);
+        optionsPanel.setDiffFormatUdiff(isDiffFormatUdiff);
         // common
         optionsPanel.setCustom(useCustom);
         optionsPanel.setCustom(custom);

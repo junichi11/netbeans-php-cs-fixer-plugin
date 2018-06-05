@@ -70,6 +70,7 @@ public final class PhpCsFixerPreferences {
     // 2.x
     private static final String USE_RULES = "use-rules"; // NOI18N
     private static final String RULES = "rules"; // NOI18N
+    private static final String DIFF_FORMAT_UDIFF = "diff-format-udiff"; // NOI18N
     // common
     private static final String CUSTOM = "custom"; // NOI18N
     private static final String VERBOSE = "verbose"; // NOI18N
@@ -210,6 +211,14 @@ public final class PhpCsFixerPreferences {
 
     public static void setDiff(PhpModule phpModule, boolean isDiff) {
         getPreferences(phpModule).putBoolean(DIFF, isDiff);
+    }
+
+    public static boolean isDiffFormatUdiff(PhpModule phpModule) {
+        return getPreferences(phpModule).getBoolean(DIFF_FORMAT_UDIFF, false);
+    }
+
+    public static void setDiffFormatUdiff(PhpModule phpModule, boolean isDiff) {
+        getPreferences(phpModule).putBoolean(DIFF_FORMAT_UDIFF, isDiff);
     }
 
     public static List<String> getAllOptions(PhpModule phpModule) {
