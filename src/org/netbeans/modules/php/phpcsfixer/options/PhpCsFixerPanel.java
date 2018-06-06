@@ -51,8 +51,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
+import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -109,6 +112,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         downloadButton = new javax.swing.JButton();
         showOutputWindowCheckBox = new javax.swing.JCheckBox();
         versionLabel = new javax.swing.JLabel();
+        selfUpdateButton = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(pathLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.pathLabel.text")); // NOI18N
 
@@ -134,6 +138,13 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(versionLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.versionLabel.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(selfUpdateButton, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.selfUpdateButton.text")); // NOI18N
+        selfUpdateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selfUpdateButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -148,18 +159,17 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(phpCsFixerNameLabel)
-                                .addGap(0, 12, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(pathTextField)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(downloadButton))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(showOutputWindowCheckBox)
-                            .addComponent(versionLabel))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(downloadButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(selfUpdateButton))))
+                    .addComponent(showOutputWindowCheckBox)
+                    .addComponent(versionLabel))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -170,12 +180,13 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                     .addComponent(pathLabel)
                     .addComponent(pathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseButton)
-                    .addComponent(downloadButton))
+                    .addComponent(downloadButton)
+                    .addComponent(selfUpdateButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(phpCsFixerNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(versionLabel)
-                .addGap(5, 5, 5)
+                .addGap(10, 10, 10)
                 .addComponent(showOutputWindowCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -248,6 +259,19 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_downloadButtonActionPerformed
+
+    @NbBundle.Messages("PhpCsFixerPanel.selfupdate.warning.message=Please set a file path")
+    private void selfUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selfUpdateButtonActionPerformed
+        if (StringUtils.isEmpty(getPath())) {
+            NotifyDescriptor.Message message = new NotifyDescriptor.Message(
+                    Bundle.PhpCsFixerPanel_selfupdate_warning_message(),
+                    NotifyDescriptor.WARNING_MESSAGE
+            );
+            DialogDisplayer.getDefault().notify(message);
+        } else {
+            selfUpdate(getPath());
+        }
+    }//GEN-LAST:event_selfUpdateButtonActionPerformed
 
     void load() {
         PhpCsFixerOptions options = getOptions();
@@ -379,7 +403,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     }
 
     public String getPath() {
-        return pathTextField.getText();
+        return pathTextField.getText().trim();
     }
 
     public void setVersion(String version) {
@@ -400,10 +424,16 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
     private void selfUpdate(String filePath) {
         RP.post(() -> {
-            Future<Integer> future = new PhpCsFixer(filePath).selfUpdate(null);
             try {
+                Future<Integer> future = PhpCsFixer.newInstance(filePath).selfUpdate(null);
                 Integer get = future.get();
                 reloadVersion(filePath);
+            } catch (InvalidPhpExecutableException ex) {
+                NotifyDescriptor.Message message = new NotifyDescriptor.Message(
+                        ex.getMessage(),
+                        NotifyDescriptor.WARNING_MESSAGE
+                );
+                DialogDisplayer.getDefault().notify(message);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             } catch (ExecutionException ex) {
@@ -432,6 +462,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel pathLabel;
     private javax.swing.JTextField pathTextField;
     private javax.swing.JLabel phpCsFixerNameLabel;
+    private javax.swing.JButton selfUpdateButton;
     private javax.swing.JCheckBox showOutputWindowCheckBox;
     private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
