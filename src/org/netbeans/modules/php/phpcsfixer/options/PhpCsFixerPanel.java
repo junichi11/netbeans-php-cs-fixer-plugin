@@ -49,6 +49,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
@@ -69,6 +71,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private final PhpCsFixerOptionsPanelController controller;
     private static final String PHPCSFIXER_LAST_FOLDER_SUFFIX = ".phpcsfixer"; // NOI18N
     private static final RequestProcessor RP = new RequestProcessor(PhpCsFixerPanel.class);
+    private static final Logger LOGGER = Logger.getLogger(PhpCsFixerPanel.class.getName());
 
     private int version;
     // 1.x
@@ -444,8 +447,12 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
     private void reloadVersion(String path) {
         RP.post(() -> {
-            String ver = new PhpCsFixer(path).getVersion();
-            SwingUtilities.invokeLater(() -> setVersion(ver));
+            try {
+                String ver = PhpCsFixer.newInstance(path).getVersion();
+                SwingUtilities.invokeLater(() -> setVersion(ver));
+            } catch (InvalidPhpExecutableException ex) {
+                LOGGER.log(Level.WARNING, ex.getMessage());
+            }
         });
     }
 
