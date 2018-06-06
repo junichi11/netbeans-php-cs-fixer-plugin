@@ -88,6 +88,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     // common
     private boolean useCustom;
     private boolean showOutputWindow;
+    private boolean runSelfUpdateOnBoot;
     private boolean isRunOnSave;
     private boolean isVerbose;
     private boolean isDiff;
@@ -116,6 +117,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         showOutputWindowCheckBox = new javax.swing.JCheckBox();
         versionLabel = new javax.swing.JLabel();
         selfUpdateButton = new javax.swing.JButton();
+        runSelfUpdateOnBootCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(pathLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.pathLabel.text")); // NOI18N
 
@@ -148,6 +150,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(runSelfUpdateOnBootCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.runSelfUpdateOnBootCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -171,8 +175,12 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                                 .addComponent(downloadButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(selfUpdateButton))))
-                    .addComponent(showOutputWindowCheckBox)
-                    .addComponent(versionLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(showOutputWindowCheckBox)
+                            .addComponent(versionLabel)
+                            .addComponent(runSelfUpdateOnBootCheckBox))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -191,6 +199,8 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 .addComponent(versionLabel)
                 .addGap(10, 10, 10)
                 .addComponent(showOutputWindowCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(runSelfUpdateOnBootCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -284,6 +294,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         // original options
         version = options.getVersion();
         showOutputWindow = options.showOutputWindow();
+        runSelfUpdateOnBoot = options.runSelfUpdateOnBoot();
 
         // 1.x
         useLevel = options.useLevel();
@@ -339,6 +350,10 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
         if (showOutputWindow != showOutputWindow()) {
             options.setShowOutputWindow(showOutputWindow());
+        }
+
+        if (runSelfUpdateOnBoot != runSelfUpdateOnBoot()) {
+            options.setRunSelfUpdateOnBoot(runSelfUpdateOnBoot());
         }
 
         if (version != optionsPanel.getVersion()) {
@@ -425,6 +440,14 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         return showOutputWindowCheckBox.isSelected();
     }
 
+    public void setRunSelfUpdateOnBoot(boolean run) {
+        runSelfUpdateOnBootCheckBox.setSelected(run);
+    }
+
+    public boolean runSelfUpdateOnBoot() {
+        return runSelfUpdateOnBootCheckBox.isSelected();
+    }
+
     private void selfUpdate(String filePath) {
         RP.post(() -> {
             try {
@@ -469,6 +492,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel pathLabel;
     private javax.swing.JTextField pathTextField;
     private javax.swing.JLabel phpCsFixerNameLabel;
+    private javax.swing.JCheckBox runSelfUpdateOnBootCheckBox;
     private javax.swing.JButton selfUpdateButton;
     private javax.swing.JCheckBox showOutputWindowCheckBox;
     private javax.swing.JLabel versionLabel;

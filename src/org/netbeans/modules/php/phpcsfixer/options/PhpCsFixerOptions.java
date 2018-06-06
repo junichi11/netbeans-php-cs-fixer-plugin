@@ -78,6 +78,7 @@ public final class PhpCsFixerOptions {
     private static final String VERBOSE = "verbose"; // NOI18N
     private static final String DIFF = "diff"; // NOI18N
     private static final String SHOW_OUTPUT_WINDOW = "show.output.window"; // NOI18N
+    private static final String RUN_SELF_UPDATE_ON_BOOT = "run.self.update.on.boot"; // NOI18N
     private volatile boolean phpcsfixerSearched = false;
 
     public static final int LATEST_VERSION = 2;
@@ -249,6 +250,14 @@ public final class PhpCsFixerOptions {
 
     public void setShowOutputWindow(boolean show) {
         getPreferences().putBoolean(SHOW_OUTPUT_WINDOW, show);
+    }
+
+    public boolean runSelfUpdateOnBoot() {
+        return getPreferences().getBoolean(RUN_SELF_UPDATE_ON_BOOT, true);
+    }
+
+    public void setRunSelfUpdateOnBoot(boolean run) {
+        getPreferences().putBoolean(RUN_SELF_UPDATE_ON_BOOT, run);
     }
 
     public List<String> getAllOptions() {

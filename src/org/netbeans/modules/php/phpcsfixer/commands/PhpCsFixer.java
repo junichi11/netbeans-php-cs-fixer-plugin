@@ -77,6 +77,7 @@ public final class PhpCsFixer {
     public static final String DOWNLOAD_URL = "http://get.sensiolabs.org/php-cs-fixer.phar"; // NOI18N
     private final String phpcsfixerPath;
     private boolean isDryRun;
+    private boolean useSilentDescriptor;
     // commands
     private static final String FIX_COMMAND = "fix"; // NOI18N
     private static final String SELF_UPDATE_COMMAND = "self-update"; // NOI18N
@@ -108,9 +109,14 @@ public final class PhpCsFixer {
             .inputOutput(InputOutput.NULL);
     private static final Logger LOGGER = Logger.getLogger(PhpCsFixer.class.getName());
 
-    public PhpCsFixer(String phpcsfixerPath) {
+    private PhpCsFixer(String phpcsfixerPath) {
+        this(phpcsfixerPath, false);
+    }
+
+    private PhpCsFixer(String phpcsfixerPath, boolean useSilentDescriptor) {
         this.phpcsfixerPath = phpcsfixerPath;
-        isDryRun = false;
+        this.useSilentDescriptor = useSilentDescriptor;
+        this.isDryRun = false;
     }
 
     public static PhpCsFixer getDefault() throws InvalidPhpExecutableException {
@@ -119,12 +125,16 @@ public final class PhpCsFixer {
     }
 
     public static PhpCsFixer newInstance(String scriptPath) throws InvalidPhpExecutableException {
+        return newInstance(scriptPath, false);
+    }
+
+    public static PhpCsFixer newInstance(String scriptPath, boolean useSilentDescriptor) throws InvalidPhpExecutableException {
         String warning = validate(scriptPath);
         if (warning != null) {
             LOGGER.log(Level.WARNING, "PHP CS Fixer path is not set."); // NOI18N
             throw new InvalidPhpExecutableException(warning);
         }
-        return new PhpCsFixer(scriptPath);
+        return new PhpCsFixer(scriptPath, useSilentDescriptor);
     }
 
     @NbBundle.Messages("PhpCsFixer.script.label=PHP CS Fixer")
@@ -212,7 +222,9 @@ public final class PhpCsFixer {
 
     private ExecutionDescriptor getDescriptor(PhpModule phpModule) {
         ExecutionDescriptor descriptor;
-        if (PhpCsFixerOptions.getInstance().showOutputWindow() || isDryRun) {
+        if (useSilentDescriptor) {
+            descriptor = NO_OUTPUT_EXECUTION_DESCRIPTOR;
+        } else if (PhpCsFixerOptions.getInstance().showOutputWindow() || isDryRun) {
             descriptor = DEFAULT_EXECUTION_DESCRIPTOR;
         } else {
             descriptor = NO_OUTPUT_EXECUTION_DESCRIPTOR;
