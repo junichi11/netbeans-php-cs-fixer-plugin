@@ -115,12 +115,16 @@ public final class PhpCsFixer {
 
     public static PhpCsFixer getDefault() throws InvalidPhpExecutableException {
         String phpcsfixerPath = PhpCsFixerOptions.getInstance().getPhpCsFixerPath();
-        String warning = validate(phpcsfixerPath);
+        return newInstance(phpcsfixerPath);
+    }
+
+    public static PhpCsFixer newInstance(String scriptPath) throws InvalidPhpExecutableException {
+        String warning = validate(scriptPath);
         if (warning != null) {
             LOGGER.log(Level.WARNING, "PHP CS Fixer path is not set."); // NOI18N
             throw new InvalidPhpExecutableException(warning);
         }
-        return new PhpCsFixer(phpcsfixerPath);
+        return new PhpCsFixer(scriptPath);
     }
 
     @NbBundle.Messages("PhpCsFixer.script.label=PHP CS Fixer")
