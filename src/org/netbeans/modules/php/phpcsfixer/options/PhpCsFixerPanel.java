@@ -47,6 +47,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.modules.php.api.util.StringUtils;
@@ -229,9 +231,10 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 while ((data = inputStream.read()) != -1) {
                     outputStream.write(data);
                 }
-                setPath(file.getCanonicalPath());
+                String filePath = file.getCanonicalPath();
+                setPath(filePath);
                 // run self-update because it might be an old version
-                new PhpCsFixer(file.getCanonicalPath()).selfUpdate(null);
+                selfUpdate(filePath);
             } catch (MalformedURLException ex) {
                 if (file.exists()) {
                     file.delete();
@@ -369,10 +372,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         pathTextField.setText(path);
         // set version
         if (!StringUtils.isEmpty(path)) {
-            RP.post(() -> {
-                String ver = new PhpCsFixer(path).getVersion();
-                SwingUtilities.invokeLater(() -> setVersion(ver));
-            });
+            reloadVersion(path);
         } else {
             setVersion(""); // NOI18N
         }
@@ -396,6 +396,27 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
     public boolean showOutputWindow() {
         return showOutputWindowCheckBox.isSelected();
+    }
+
+    private void selfUpdate(String filePath) {
+        RP.post(() -> {
+            Future<Integer> future = new PhpCsFixer(filePath).selfUpdate(null);
+            try {
+                Integer get = future.get();
+                reloadVersion(filePath);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        });
+    }
+
+    private void reloadVersion(String path) {
+        RP.post(() -> {
+            String ver = new PhpCsFixer(path).getVersion();
+            SwingUtilities.invokeLater(() -> setVersion(ver));
+        });
     }
 
     boolean valid() {
