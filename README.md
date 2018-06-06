@@ -49,6 +49,10 @@ e.g. `--cache-file=/path/to/.php_cs.cache`
 
 If you would like to avoid showing the output window, please uncheck it. (Checked by default)
 
+### Run self-update command on boot
+
+If you would like to run the self-update command on boot, please check it. (Unchecked by default)
+
 ## Usage
 
 1. Right-click
