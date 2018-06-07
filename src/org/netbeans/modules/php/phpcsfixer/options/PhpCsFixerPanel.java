@@ -50,6 +50,8 @@ import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
@@ -237,10 +239,11 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             FileObject[] children = downloadFileObject.getChildren();
             for (FileObject child : children) {
                 if (!child.isFolder() && child.getNameExt().equals(PhpCsFixer.NAME_LONG)) {
+                    LOGGER.log(INFO, PhpCsFixer.NAME_LONG + " already exists in {0} directory.", downloadFileObject.getName()); // NOI18N
                     try {
                         setPath(FileUtil.toFile(child).getCanonicalPath());
                     } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
+                        LOGGER.log(WARNING, ex.getMessage());
                     }
                     return;
                 }
@@ -263,7 +266,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 if (file.exists()) {
                     file.delete();
                 }
-                Exceptions.printStackTrace(ex);
+                LOGGER.log(WARNING, "Download URL may be changed.", ex); // NOI18N
             } catch (IOException ex) {
                 if (file.exists()) {
                     file.delete();
@@ -463,7 +466,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             } catch (ExecutionException ex) {
-                Exceptions.printStackTrace(ex);
+                LOGGER.log(WARNING, null, ex);
             }
         });
     }
@@ -474,7 +477,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 String ver = PhpCsFixer.newInstance(path).getVersion();
                 SwingUtilities.invokeLater(() -> setVersion(ver));
             } catch (InvalidPhpExecutableException ex) {
-                LOGGER.log(Level.WARNING, ex.getMessage());
+                LOGGER.log(WARNING, ex.getMessage());
             }
         });
     }
