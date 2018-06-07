@@ -57,8 +57,7 @@ import javax.swing.filechooser.FileFilter;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
+import org.netbeans.modules.php.phpcsfixer.ui.UiUtils;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -277,11 +276,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     @NbBundle.Messages("PhpCsFixerPanel.selfupdate.warning.message=Please set a file path")
     private void selfUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selfUpdateButtonActionPerformed
         if (StringUtils.isEmpty(getPath())) {
-            NotifyDescriptor.Message message = new NotifyDescriptor.Message(
-                    Bundle.PhpCsFixerPanel_selfupdate_warning_message(),
-                    NotifyDescriptor.WARNING_MESSAGE
-            );
-            DialogDisplayer.getDefault().notify(message);
+            UiUtils.showWarningMessage(Bundle.PhpCsFixerPanel_selfupdate_warning_message());
         } else {
             selfUpdate(getPath());
         }
@@ -456,11 +451,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 Integer get = future.get();
                 reloadVersion(filePath);
             } catch (InvalidPhpExecutableException ex) {
-                NotifyDescriptor.Message message = new NotifyDescriptor.Message(
-                        ex.getMessage(),
-                        NotifyDescriptor.WARNING_MESSAGE
-                );
-                DialogDisplayer.getDefault().notify(message);
+                UiUtils.showWarningMessage(ex.getMessage());
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             } catch (ExecutionException ex) {
