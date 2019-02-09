@@ -58,7 +58,7 @@ https://github.com/FriendsOfPHP/PHP-CS-Fixer
 
 ## NOTE
 
-- Run on save feature may not work somethimes. Now after 1 second, the command is run. But I don't have another idea at the moment, sorry.
+- Run on save feature may not work sometimes. Now after 1 second, the command is run. But I don't have another idea at the moment, sorry.
 
 ## License
 
