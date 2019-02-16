@@ -55,6 +55,9 @@ import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions;
 import org.netbeans.modules.php.phpcsfixer.preferences.PhpCsFixerPreferences;
 import org.openide.filesystems.FileObject;
+import static org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer.DIFF_FORMAT_UDIFF_PARAM;
+import static org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer.DIFF_PARAM;
+import static org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer.VERBOSE_PARAM;
 
 /**
  *
@@ -110,6 +113,7 @@ public abstract class PhpCsFixerBaseAction extends AbstractAction {
         boolean isDryRun = isDryRun();
         boolean isVerbose;
         boolean isDiff;
+        boolean isDiffFormatUdiff;
 
         if (phpModule == null || PhpCsFixerPreferences.useGlobal(phpModule)) {
             // use global
@@ -117,18 +121,23 @@ public abstract class PhpCsFixerBaseAction extends AbstractAction {
             options.addAll(instance.getAllOptions());
             isVerbose = instance.isVerbose();
             isDiff = instance.isDiff();
+            isDiffFormatUdiff = instance.isDiffFormatUdiff();
         } else {
             // use project
             options.addAll(PhpCsFixerPreferences.getAllOptions(phpModule));
             isVerbose = PhpCsFixerPreferences.isVerbose(phpModule);
             isDiff = PhpCsFixerPreferences.isDiff(phpModule);
+            isDiffFormatUdiff = PhpCsFixerPreferences.isDiffFormatUdiff(phpModule);
         }
 
         if (isDryRun) {
             if (isVerbose) {
-                options.add("--verbose"); // NOI18N
+                options.add(VERBOSE_PARAM);
                 if (isDiff) {
-                    options.add("--diff"); // NOI18N
+                    options.add(DIFF_PARAM);
+                    if (isDiffFormatUdiff) {
+                        options.add(DIFF_FORMAT_UDIFF_PARAM);
+                    }
                 }
             }
         }

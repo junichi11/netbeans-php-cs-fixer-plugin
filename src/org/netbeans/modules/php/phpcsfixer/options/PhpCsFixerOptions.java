@@ -71,12 +71,14 @@ public final class PhpCsFixerOptions {
     // 2.x
     private static final String USE_RULES = "use.rules"; // NOI18N
     private static final String RULES = "rules"; // NOI18N
+    private static final String DIFF_FORMAT_UDIFF = "diff.format.udiff"; // NOI18N
     // common
     private static final String USE_CUSTOM = "use.custom"; // NOI18N
     private static final String CUSTOM = "custom"; // NOI18N
     private static final String VERBOSE = "verbose"; // NOI18N
     private static final String DIFF = "diff"; // NOI18N
     private static final String SHOW_OUTPUT_WINDOW = "show.output.window"; // NOI18N
+    private static final String RUN_SELF_UPDATE_ON_BOOT = "run.self.update.on.boot"; // NOI18N
     private volatile boolean phpcsfixerSearched = false;
 
     public static final int LATEST_VERSION = 2;
@@ -116,7 +118,7 @@ public final class PhpCsFixerOptions {
     }
 
     public int getVersion() {
-        int version = getPreferences().getInt(PHP_CS_FIXER_VERSION, 1);
+        int version = getPreferences().getInt(PHP_CS_FIXER_VERSION, 2);
         if (version <= 0 || LATEST_VERSION < version) {
             version = LATEST_VERSION;
         }
@@ -234,12 +236,28 @@ public final class PhpCsFixerOptions {
         getPreferences().putBoolean(DIFF, isDiff);
     }
 
+    public boolean isDiffFormatUdiff() {
+        return getPreferences().getBoolean(DIFF_FORMAT_UDIFF, false);
+    }
+
+    public void setDiffFormatUdiff(boolean isUdiff) {
+        getPreferences().putBoolean(DIFF_FORMAT_UDIFF, isUdiff);
+    }
+
     public boolean showOutputWindow() {
         return getPreferences().getBoolean(SHOW_OUTPUT_WINDOW, true);
     }
 
     public void setShowOutputWindow(boolean show) {
         getPreferences().putBoolean(SHOW_OUTPUT_WINDOW, show);
+    }
+
+    public boolean runSelfUpdateOnBoot() {
+        return getPreferences().getBoolean(RUN_SELF_UPDATE_ON_BOOT, true);
+    }
+
+    public void setRunSelfUpdateOnBoot(boolean run) {
+        getPreferences().putBoolean(RUN_SELF_UPDATE_ON_BOOT, run);
     }
 
     public List<String> getAllOptions() {

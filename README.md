@@ -39,6 +39,20 @@ https://github.com/FriendsOfPHP/PHP-CS-Fixer
 `project properties > PHP CS Fixer`
 - If you would like to use settings each projects, please, check `use project settings`
 
+### Customizing Options
+
+If you would like to use some options, please check the custom checkbox, then please add them to it.
+
+e.g. `--cache-file=/path/to/.php_cs.cache`
+
+### Show an output window
+
+If you would like to avoid showing the output window, please uncheck it. (Checked by default)
+
+### Run self-update command on boot
+
+If you would like to run the self-update command on boot, please check it. (Unchecked by default)
+
 ## Usage
 
 1. Right-click
@@ -58,7 +72,7 @@ https://github.com/FriendsOfPHP/PHP-CS-Fixer
 
 ## NOTE
 
-- Run on save feature may not work somethimes. Now after 1 second, the command is run. But I don't have another idea at the moment, sorry.
+- Run on save feature may not work sometimes. Now after 1 second, the command is run. But I don't have another idea at the moment, sorry.
 
 ## License
 

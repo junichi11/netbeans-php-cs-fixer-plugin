@@ -187,6 +187,14 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         diffCheckBox.setSelected(isDiff);
     }
 
+    public boolean isDiffFormatUdiff() {
+        return diffFormatUdiffCheckBox.isSelected();
+    }
+
+    public void setDiffFormatUdiff(boolean isUdiff) {
+        diffFormatUdiffCheckBox.setSelected(isUdiff);
+    }
+
     private void setVersion1ComponentsVisible(boolean isVisible) {
         levelCheckBox.setVisible(isVisible);
         levelComboBox.setVisible(isVisible);
@@ -199,6 +207,7 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
     private void setVersion2ComponentsVisible(boolean isVisible) {
         rulesCheckBox.setVisible(isVisible);
         rulesTextField.setVisible(isVisible);
+        diffFormatUdiffCheckBox.setVisible(isVisible);
     }
 
     /**
@@ -227,6 +236,7 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         versionComboBox = new javax.swing.JComboBox<>();
         rulesCheckBox = new javax.swing.JCheckBox();
         rulesTextField = new javax.swing.JTextField();
+        diffFormatUdiffCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(levelCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.levelCheckBox.text")); // NOI18N
 
@@ -265,6 +275,8 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
 
         rulesTextField.setText(org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.rulesTextField.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(diffFormatUdiffCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerOptionsPanel.class, "PhpCsFixerOptionsPanel.diffFormatUdiffCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -276,14 +288,6 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
                         .addComponent(dryRunLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dryRunSeparator))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(runOnSaveCheckBox)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(verboseCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(diffCheckBox)))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(levelCheckBox)
@@ -302,7 +306,17 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
                                     .addComponent(configComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(versionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 228, Short.MAX_VALUE))
-                            .addComponent(rulesTextField))))
+                            .addComponent(rulesTextField)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(runOnSaveCheckBox)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(verboseCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(diffCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(diffFormatUdiffCheckBox)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -341,7 +355,8 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(verboseCheckBox)
-                    .addComponent(diffCheckBox))
+                    .addComponent(diffCheckBox)
+                    .addComponent(diffFormatUdiffCheckBox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -363,6 +378,7 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox customCheckBox;
     private javax.swing.JTextField customTextField;
     private javax.swing.JCheckBox diffCheckBox;
+    private javax.swing.JCheckBox diffFormatUdiffCheckBox;
     private javax.swing.JLabel dryRunLabel;
     private javax.swing.JSeparator dryRunSeparator;
     private javax.swing.JCheckBox fixersCheckBox;

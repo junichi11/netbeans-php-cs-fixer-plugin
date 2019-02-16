@@ -45,10 +45,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
+import org.netbeans.api.extexecution.base.input.InputProcessor;
+import org.netbeans.api.extexecution.base.input.InputProcessors;
+import org.netbeans.api.extexecution.base.input.LineProcessor;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.executable.PhpExecutable;
 import org.netbeans.modules.php.api.executable.PhpExecutableValidator;
@@ -57,6 +61,7 @@ import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions;
 import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanelController;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.InputOutput;
 
@@ -72,17 +77,22 @@ public final class PhpCsFixer {
     public static final String DOWNLOAD_URL = "http://get.sensiolabs.org/php-cs-fixer.phar"; // NOI18N
     private final String phpcsfixerPath;
     private boolean isDryRun;
+    private boolean useSilentDescriptor;
     // commands
     private static final String FIX_COMMAND = "fix"; // NOI18N
     private static final String SELF_UPDATE_COMMAND = "self-update"; // NOI18N
     //parameters
+    private static final String VERSION_PARAM = "--version"; // NOI18N
     public static final String DRY_RUN_PARAM = "--dry-run"; // NOI18N
+    public static final String VERBOSE_PARAM = "--verbose"; // NOI18N
+    public static final String DIFF_PARAM = "--diff"; // NOI18N
     // 1.x
     public static final String CONFIG_PARAM = "--config=%s"; // NOI18N
     public static final String LEVEL_PARAM = "--level=%s"; // NOI18N
     public static final String FIXERS_PARAM = "--fixers=%s"; // NOI18N
     // 2.x
     public static final String RULES_PARAM = "--rules=%s"; // NOI18N
+    public static final String DIFF_FORMAT_UDIFF_PARAM = "--diff-format=udiff"; // NOI18N
     private static final List<String> DEFAULT_PARAMS = Arrays.asList(
             "--ansi", // NOI18N
             "--no-interaction"); // NOI18N
@@ -99,19 +109,32 @@ public final class PhpCsFixer {
             .inputOutput(InputOutput.NULL);
     private static final Logger LOGGER = Logger.getLogger(PhpCsFixer.class.getName());
 
-    public PhpCsFixer(String phpcsfixerPath) {
+    private PhpCsFixer(String phpcsfixerPath) {
+        this(phpcsfixerPath, false);
+    }
+
+    private PhpCsFixer(String phpcsfixerPath, boolean useSilentDescriptor) {
         this.phpcsfixerPath = phpcsfixerPath;
-        isDryRun = false;
+        this.useSilentDescriptor = useSilentDescriptor;
+        this.isDryRun = false;
     }
 
     public static PhpCsFixer getDefault() throws InvalidPhpExecutableException {
         String phpcsfixerPath = PhpCsFixerOptions.getInstance().getPhpCsFixerPath();
-        String warning = validate(phpcsfixerPath);
+        return newInstance(phpcsfixerPath);
+    }
+
+    public static PhpCsFixer newInstance(String scriptPath) throws InvalidPhpExecutableException {
+        return newInstance(scriptPath, false);
+    }
+
+    public static PhpCsFixer newInstance(String scriptPath, boolean useSilentDescriptor) throws InvalidPhpExecutableException {
+        String warning = validate(scriptPath);
         if (warning != null) {
             LOGGER.log(Level.WARNING, "PHP CS Fixer path is not set."); // NOI18N
             throw new InvalidPhpExecutableException(warning);
         }
-        return new PhpCsFixer(phpcsfixerPath);
+        return new PhpCsFixer(scriptPath, useSilentDescriptor);
     }
 
     @NbBundle.Messages("PhpCsFixer.script.label=PHP CS Fixer")
@@ -137,6 +160,28 @@ public final class PhpCsFixer {
 
     public Future<Integer> selfUpdate(PhpModule phpModule) {
         return runCommand(phpModule, SELF_UPDATE_COMMAND, Bundle.PhpCsFixer_run(SELF_UPDATE_COMMAND));
+    }
+
+    /**
+     * Get version.
+     *
+     * @return version
+     */
+    public String getVersion() {
+        DefaultLineProcessor lineProcessor = new DefaultLineProcessor();
+        Future<Integer> result = getPhpExecutable(null, "version")
+                .additionalParameters(Arrays.asList(VERSION_PARAM))
+                .run(NO_OUTPUT_EXECUTION_DESCRIPTOR, getOutputProcessorFactory(lineProcessor));
+        try {
+            if (result != null) {
+                result.get();
+            }
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return lineProcessor.getResult();
     }
 
     private Future<Integer> runCommand(PhpModule phpModule, String command, String title) {
@@ -177,7 +222,9 @@ public final class PhpCsFixer {
 
     private ExecutionDescriptor getDescriptor(PhpModule phpModule) {
         ExecutionDescriptor descriptor;
-        if (PhpCsFixerOptions.getInstance().showOutputWindow() || isDryRun) {
+        if (useSilentDescriptor) {
+            descriptor = NO_OUTPUT_EXECUTION_DESCRIPTOR;
+        } else if (PhpCsFixerOptions.getInstance().showOutputWindow() || isDryRun) {
             descriptor = DEFAULT_EXECUTION_DESCRIPTOR;
         } else {
             descriptor = NO_OUTPUT_EXECUTION_DESCRIPTOR;
@@ -193,5 +240,46 @@ public final class PhpCsFixer {
             }
         }
         return descriptor;
+    }
+
+    /**
+     * Get InputProcessorFactory.
+     *
+     * @param lineProcessor
+     * @return InputProcessorFactory
+     */
+    private ExecutionDescriptor.InputProcessorFactory2 getOutputProcessorFactory(final LineProcessor lineProcessor) {
+        return (InputProcessor defaultProcessor) -> InputProcessors.ansiStripping(InputProcessors.bridge(lineProcessor));
+    }
+
+    private static class DefaultLineProcessor implements LineProcessor {
+
+        private final StringBuilder result = new StringBuilder();
+        private final List<String> list = new ArrayList<>();
+
+        @Override
+        public void processLine(String line) {
+            list.add(line);
+            if (!list.isEmpty()) {
+                result.append("\n"); // NOI18N
+            }
+            result.append(line);
+        }
+
+        @Override
+        public void reset() {
+        }
+
+        @Override
+        public void close() {
+        }
+
+        public String getResult() {
+            return result.toString();
+        }
+
+        public List<String> asLines() {
+            return list;
+        }
     }
 }

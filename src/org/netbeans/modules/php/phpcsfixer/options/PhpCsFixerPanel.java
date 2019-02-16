@@ -47,20 +47,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
+import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
+import org.netbeans.modules.php.phpcsfixer.ui.UiUtils;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 final class PhpCsFixerPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 8727885479187122174L;
     private final PhpCsFixerOptionsPanelController controller;
     private static final String PHPCSFIXER_LAST_FOLDER_SUFFIX = ".phpcsfixer"; // NOI18N
+    private static final RequestProcessor RP = new RequestProcessor(PhpCsFixerPanel.class);
+    private static final Logger LOGGER = Logger.getLogger(PhpCsFixerPanel.class.getName());
 
     private int version;
     // 1.x
@@ -72,10 +82,12 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private String fixers;
     // 2.x
     private boolean useRules;
+    private boolean isDiffFormatUdiff;
     private String rules;
     // common
     private boolean useCustom;
     private boolean showOutputWindow;
+    private boolean runSelfUpdateOnBoot;
     private boolean isRunOnSave;
     private boolean isVerbose;
     private boolean isDiff;
@@ -84,6 +96,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     PhpCsFixerPanel(PhpCsFixerOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
+        setVersion(""); // NOI18N
     }
 
     /**
@@ -101,6 +114,9 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         optionsPanel = new org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanel();
         downloadButton = new javax.swing.JButton();
         showOutputWindowCheckBox = new javax.swing.JCheckBox();
+        versionLabel = new javax.swing.JLabel();
+        selfUpdateButton = new javax.swing.JButton();
+        runSelfUpdateOnBootCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(pathLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.pathLabel.text")); // NOI18N
 
@@ -124,6 +140,17 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(showOutputWindowCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.showOutputWindowCheckBox.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(versionLabel, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.versionLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(selfUpdateButton, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.selfUpdateButton.text")); // NOI18N
+        selfUpdateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selfUpdateButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(runSelfUpdateOnBootCheckBox, org.openide.util.NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.runSelfUpdateOnBootCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -138,15 +165,20 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(phpCsFixerNameLabel)
-                                .addGap(0, 12, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(pathTextField)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(downloadButton))))
+                                .addComponent(downloadButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(selfUpdateButton))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(showOutputWindowCheckBox)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(showOutputWindowCheckBox)
+                            .addComponent(versionLabel)
+                            .addComponent(runSelfUpdateOnBootCheckBox))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -158,11 +190,16 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                     .addComponent(pathLabel)
                     .addComponent(pathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseButton)
-                    .addComponent(downloadButton))
+                    .addComponent(downloadButton)
+                    .addComponent(selfUpdateButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(phpCsFixerNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(versionLabel)
+                .addGap(10, 10, 10)
                 .addComponent(showOutputWindowCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(runSelfUpdateOnBootCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -199,10 +236,11 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             FileObject[] children = downloadFileObject.getChildren();
             for (FileObject child : children) {
                 if (!child.isFolder() && child.getNameExt().equals(PhpCsFixer.NAME_LONG)) {
+                    LOGGER.log(INFO, PhpCsFixer.NAME_LONG + " already exists in {0} directory.", downloadFileObject.getName()); // NOI18N
                     try {
                         setPath(FileUtil.toFile(child).getCanonicalPath());
                     } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
+                        LOGGER.log(WARNING, ex.getMessage());
                     }
                     return;
                 }
@@ -210,21 +248,22 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
             // create file
             File file = new File(downloadDirectory, PhpCsFixer.NAME_LONG);
-            try {
-                try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                    URL downloadUrl = new URL(PhpCsFixer.DOWNLOAD_URL);
-                    InputStream inputStream = downloadUrl.openStream();
-                    int data;
-                    while ((data = inputStream.read()) != -1) {
-                        outputStream.write(data);
-                    }
-                    setPath(file.getCanonicalPath());
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                URL downloadUrl = new URL(PhpCsFixer.DOWNLOAD_URL);
+                InputStream inputStream = downloadUrl.openStream();
+                int data;
+                while ((data = inputStream.read()) != -1) {
+                    outputStream.write(data);
                 }
+                String filePath = file.getCanonicalPath();
+                setPath(filePath);
+                // run self-update because it might be an old version
+                selfUpdate(filePath);
             } catch (MalformedURLException ex) {
                 if (file.exists()) {
                     file.delete();
                 }
-                Exceptions.printStackTrace(ex);
+                LOGGER.log(WARNING, "Download URL may be changed.", ex); // NOI18N
             } catch (IOException ex) {
                 if (file.exists()) {
                     file.delete();
@@ -234,6 +273,15 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_downloadButtonActionPerformed
 
+    @NbBundle.Messages("PhpCsFixerPanel.selfupdate.warning.message=Please set a file path")
+    private void selfUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selfUpdateButtonActionPerformed
+        if (StringUtils.isEmpty(getPath())) {
+            UiUtils.showWarningMessage(Bundle.PhpCsFixerPanel_selfupdate_warning_message());
+        } else {
+            selfUpdate(getPath());
+        }
+    }//GEN-LAST:event_selfUpdateButtonActionPerformed
+
     void load() {
         PhpCsFixerOptions options = getOptions();
         setPath(options.getPhpCsFixerPath());
@@ -242,6 +290,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         // original options
         version = options.getVersion();
         showOutputWindow = options.showOutputWindow();
+        runSelfUpdateOnBoot = options.runSelfUpdateOnBoot();
 
         // 1.x
         useLevel = options.useLevel();
@@ -254,6 +303,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         // 2.x
         useRules = options.useRules();
         rules = options.getRules();
+        isDiffFormatUdiff = options.isDiffFormatUdiff();
 
         // common
         useCustom = options.useCustom();
@@ -274,6 +324,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         // 2.x
         optionsPanel.setRules(useRules);
         optionsPanel.setRules(rules);
+        optionsPanel.setDiffFormatUdiff(isDiffFormatUdiff);
 
         // common
         optionsPanel.setCustom(useCustom);
@@ -295,6 +346,10 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
         if (showOutputWindow != showOutputWindow()) {
             options.setShowOutputWindow(showOutputWindow());
+        }
+
+        if (runSelfUpdateOnBoot != runSelfUpdateOnBoot()) {
+            options.setRunSelfUpdateOnBoot(runSelfUpdateOnBoot());
         }
 
         if (version != optionsPanel.getVersion()) {
@@ -329,6 +384,9 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         if (useCustom != optionsPanel.useCustom()) {
             options.setCustom(optionsPanel.useCustom());
         }
+        if (isDiffFormatUdiff != optionsPanel.isDiffFormatUdiff()) {
+            options.setDiff(optionsPanel.isDiffFormatUdiff());
+        }
         // common
         if (!custom.equals(optionsPanel.getCustom())) {
             options.setCustom(optionsPanel.getCustom());
@@ -350,10 +408,24 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
     public void setPath(String path) {
         pathTextField.setText(path);
+        // set version
+        if (!StringUtils.isEmpty(path)) {
+            reloadVersion(path);
+        } else {
+            setVersion(""); // NOI18N
+        }
     }
 
     public String getPath() {
-        return pathTextField.getText();
+        return pathTextField.getText().trim();
+    }
+
+    public void setVersion(String version) {
+        versionLabel.setText(String.format("<html><b>%s</b></html>", version)); // NOI18N
+    }
+
+    public String getVersion() {
+        return versionLabel.getText();
     }
 
     public void setShowOutputWindow(boolean show) {
@@ -362,6 +434,41 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
     public boolean showOutputWindow() {
         return showOutputWindowCheckBox.isSelected();
+    }
+
+    public void setRunSelfUpdateOnBoot(boolean run) {
+        runSelfUpdateOnBootCheckBox.setSelected(run);
+    }
+
+    public boolean runSelfUpdateOnBoot() {
+        return runSelfUpdateOnBootCheckBox.isSelected();
+    }
+
+    private void selfUpdate(String filePath) {
+        RP.post(() -> {
+            try {
+                Future<Integer> future = PhpCsFixer.newInstance(filePath).selfUpdate(null);
+                Integer get = future.get();
+                reloadVersion(filePath);
+            } catch (InvalidPhpExecutableException ex) {
+                UiUtils.showWarningMessage(ex.getMessage());
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException ex) {
+                LOGGER.log(WARNING, null, ex);
+            }
+        });
+    }
+
+    private void reloadVersion(String path) {
+        RP.post(() -> {
+            try {
+                String ver = PhpCsFixer.newInstance(path).getVersion();
+                SwingUtilities.invokeLater(() -> setVersion(ver));
+            } catch (InvalidPhpExecutableException ex) {
+                LOGGER.log(WARNING, ex.getMessage());
+            }
+        });
     }
 
     boolean valid() {
@@ -377,7 +484,10 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     private javax.swing.JLabel pathLabel;
     private javax.swing.JTextField pathTextField;
     private javax.swing.JLabel phpCsFixerNameLabel;
+    private javax.swing.JCheckBox runSelfUpdateOnBootCheckBox;
+    private javax.swing.JButton selfUpdateButton;
     private javax.swing.JCheckBox showOutputWindowCheckBox;
+    private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 
     private static class FileFilterImpl extends FileFilter {
