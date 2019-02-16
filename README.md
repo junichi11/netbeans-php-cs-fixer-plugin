@@ -74,6 +74,10 @@ If you would like to run the self-update command on boot, please check it. (Unch
 
 - Run on save feature may not work sometimes. Now after 1 second, the command is run. But I don't have another idea at the moment, sorry.
 
+## Donation
+
+<a href="https://www.patreon.com/junichi11"><img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" height="50"></a>
+
 ## License
 
-[Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
+Apache License, Version 2.0
