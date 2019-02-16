@@ -72,7 +72,7 @@ If you would like to run the self-update command on boot, please check it. (Unch
 
 ## NOTE
 
-- Run on save feature may not work somethimes. Now after 1 second, the command is run. But I don't have another idea at the moment, sorry.
+- Run on save feature may not work sometimes. Now after 1 second, the command is run. But I don't have another idea at the moment, sorry.
 
 ## License
 
