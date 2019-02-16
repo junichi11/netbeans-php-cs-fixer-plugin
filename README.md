@@ -76,4 +76,4 @@ If you would like to run the self-update command on boot, please check it. (Unch
 
 ## License
 
-[Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
+Apache License, Version 2.0
