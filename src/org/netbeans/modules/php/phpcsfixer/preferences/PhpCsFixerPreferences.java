@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
 import static org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptions.LATEST_VERSION;
 
@@ -213,7 +214,7 @@ public final class PhpCsFixerPreferences {
             }
         }
         if (useCustom(phpModule) && !getCustom(phpModule).isEmpty()) {
-            all.add(getCustom(phpModule));
+            all.addAll(StringUtils.explode(getCustom(phpModule), " ")); // NOI18N
         }
         return all;
     }

@@ -252,7 +252,7 @@ public final class PhpCsFixerOptions {
             }
         }
         if (useCustom() && !getCustom().isEmpty()) {
-            all.add(getCustom());
+            all.addAll(StringUtils.explode(getCustom(), " ")); // NOI18N
         }
 
         return all;
