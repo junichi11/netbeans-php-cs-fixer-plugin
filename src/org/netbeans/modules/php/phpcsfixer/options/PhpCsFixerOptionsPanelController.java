@@ -27,7 +27,7 @@ import org.openide.util.NbBundle;
 @UiUtils.PhpOptionsPanelRegistration(
         id = PhpCsFixerOptionsPanelController.ID,
         displayName = "#LBL_PhpCsFixerOptionsName",
-        position = 2000
+        position = 2010
 )
 @NbBundle.Messages({
     "LBL_PhpCsFixerOptionsName=PHP CS Fixer",
