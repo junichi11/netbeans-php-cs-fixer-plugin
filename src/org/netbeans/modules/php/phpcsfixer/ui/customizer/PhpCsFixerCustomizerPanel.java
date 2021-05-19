@@ -17,10 +17,18 @@ package org.netbeans.modules.php.phpcsfixer.ui.customizer;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ButtonGroup;
+import javax.swing.GroupLayout;
 import javax.swing.JComboBox;
+import javax.swing.JRadioButton;
+import javax.swing.LayoutStyle;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanel;
 import org.netbeans.modules.php.phpcsfixer.preferences.PhpCsFixerPreferences;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer.Category;
+import org.openide.awt.Mnemonics;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -198,64 +206,62 @@ public final class PhpCsFixerCustomizerPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup = new javax.swing.ButtonGroup();
-        useGlobalRadioButton = new javax.swing.JRadioButton();
-        useProjectRadioButton = new javax.swing.JRadioButton();
-        optionsPanel = new org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanel();
+        buttonGroup = new ButtonGroup();
+        useGlobalRadioButton = new JRadioButton();
+        useProjectRadioButton = new JRadioButton();
+        optionsPanel = new PhpCsFixerOptionsPanel();
 
         buttonGroup.add(useGlobalRadioButton);
         useGlobalRadioButton.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(useGlobalRadioButton, org.openide.util.NbBundle.getMessage(PhpCsFixerCustomizerPanel.class, "PhpCsFixerCustomizerPanel.useGlobalRadioButton.text")); // NOI18N
-        useGlobalRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        Mnemonics.setLocalizedText(useGlobalRadioButton, NbBundle.getMessage(PhpCsFixerCustomizerPanel.class, "PhpCsFixerCustomizerPanel.useGlobalRadioButton.text")); // NOI18N
+        useGlobalRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 useGlobalRadioButtonActionPerformed(evt);
             }
         });
 
         buttonGroup.add(useProjectRadioButton);
-        org.openide.awt.Mnemonics.setLocalizedText(useProjectRadioButton, org.openide.util.NbBundle.getMessage(PhpCsFixerCustomizerPanel.class, "PhpCsFixerCustomizerPanel.useProjectRadioButton.text")); // NOI18N
-        useProjectRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        Mnemonics.setLocalizedText(useProjectRadioButton, NbBundle.getMessage(PhpCsFixerCustomizerPanel.class, "PhpCsFixerCustomizerPanel.useProjectRadioButton.text")); // NOI18N
+        useProjectRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 useProjectRadioButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(useGlobalRadioButton)
                     .addComponent(useProjectRadioButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(optionsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(useGlobalRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(useProjectRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(optionsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void useGlobalRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useGlobalRadioButtonActionPerformed
+    private void useGlobalRadioButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useGlobalRadioButtonActionPerformed
         setEnabledProject(false);
     }//GEN-LAST:event_useGlobalRadioButtonActionPerformed
 
-    private void useProjectRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useProjectRadioButtonActionPerformed
+    private void useProjectRadioButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useProjectRadioButtonActionPerformed
         setEnabledProject(true);
     }//GEN-LAST:event_useProjectRadioButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup;
-    private org.netbeans.modules.php.phpcsfixer.options.PhpCsFixerOptionsPanel optionsPanel;
-    private javax.swing.JRadioButton useGlobalRadioButton;
-    private javax.swing.JRadioButton useProjectRadioButton;
+    private ButtonGroup buttonGroup;
+    private PhpCsFixerOptionsPanel optionsPanel;
+    private JRadioButton useGlobalRadioButton;
+    private JRadioButton useProjectRadioButton;
     // End of variables declaration//GEN-END:variables
 
     private void setEnabledProject(boolean enabled) {
