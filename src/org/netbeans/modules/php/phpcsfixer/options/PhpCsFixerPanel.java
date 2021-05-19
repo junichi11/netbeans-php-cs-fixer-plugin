@@ -37,6 +37,7 @@ import javax.swing.LayoutStyle;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpcsfixer.commands.PhpCsFixer;
 import org.netbeans.modules.php.phpcsfixer.ui.UiUtils;
@@ -196,7 +197,9 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                 .showOpenDialog();
         if (phpcsfixer != null) {
             phpcsfixer = FileUtil.normalizeFile(phpcsfixer);
-            if (phpcsfixer.getName().equals(PhpCsFixer.NAME_LONG) || phpcsfixer.getName().equals(PhpCsFixer.NAME)) {
+            if (phpcsfixer.getName().equals(PhpCsFixer.NAME_LONG)
+                    || phpcsfixer.getName().equals(PhpCsFixer.NAME)
+                    || phpcsfixer.getName().equals(PhpCsFixer.NAME + FileUtils.getScriptExtension(true))) {
                 setPath(phpcsfixer.getAbsolutePath());
             } else {
                 setPath(""); // NOI18N
@@ -319,7 +322,9 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
     void store() {
         PhpCsFixerOptions options = getOptions();
         String path = getPath();
-        if (path.endsWith(PhpCsFixer.NAME) || path.endsWith(PhpCsFixer.NAME_LONG)) {
+        if (path.endsWith(PhpCsFixer.NAME)
+                || path.endsWith(PhpCsFixer.NAME_LONG)
+                || path.endsWith(PhpCsFixer.NAME + FileUtils.getScriptExtension(true))) {
             options.setPhpCsFixerPath(getPath());
         } else {
             options.setPhpCsFixerPath(""); // NOI18N
