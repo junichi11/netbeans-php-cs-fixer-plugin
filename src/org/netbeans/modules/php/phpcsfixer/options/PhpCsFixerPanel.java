@@ -124,7 +124,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
 
         Mnemonics.setLocalizedText(showOutputWindowCheckBox, NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.showOutputWindowCheckBox.text")); // NOI18N
 
-        Mnemonics.setLocalizedText(versionLabel, NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.versionLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(versionLabel, "VERSION"); // NOI18N
 
         Mnemonics.setLocalizedText(selfUpdateButton, NbBundle.getMessage(PhpCsFixerPanel.class, "PhpCsFixerPanel.selfUpdateButton.text")); // NOI18N
         selfUpdateButton.addActionListener(new ActionListener() {
