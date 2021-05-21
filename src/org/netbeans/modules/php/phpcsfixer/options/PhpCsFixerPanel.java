@@ -15,6 +15,7 @@
  */
 package org.netbeans.modules.php.phpcsfixer.options;
 
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -446,12 +447,17 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
         });
     }
 
+    @NbBundle.Messages("PhpCsFixerPanel.loading.version=Loading...")
     private void reloadVersion(String path) {
+        if (!EventQueue.isDispatchThread()) {
+            SwingUtilities.invokeLater(() -> setVersion(Bundle.PhpCsFixerPanel_loading_version()));
+        }
         RP.post(() -> {
             try {
                 String ver = PhpCsFixer.newInstance(path).getVersion();
                 SwingUtilities.invokeLater(() -> setVersion(ver));
             } catch (InvalidPhpExecutableException ex) {
+                SwingUtilities.invokeLater(() -> setVersion("")); // NOI18N
                 LOGGER.log(WARNING, ex.getMessage());
             }
         });
