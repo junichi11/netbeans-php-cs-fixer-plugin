@@ -189,7 +189,11 @@ public final class PhpCsFixerPreferences {
     }
 
     public static boolean isDiffFormatUdiff(PhpModule phpModule) {
-        return getPreferences(phpModule).getBoolean(DIFF_FORMAT_UDIFF, false);
+        int version = getVersion(phpModule);
+        if (version == 2) {
+            return getPreferences(phpModule).getBoolean(DIFF_FORMAT_UDIFF, false);
+        }
+        return false;
     }
 
     public static void setDiffFormatUdiff(PhpModule phpModule, boolean isDiff) {

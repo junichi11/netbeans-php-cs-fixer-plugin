@@ -153,7 +153,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(pathTextField)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(browseButton, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(browseButton)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(downloadButton)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)

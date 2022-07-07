@@ -211,7 +211,11 @@ public final class PhpCsFixerOptions {
     }
 
     public boolean isDiffFormatUdiff() {
-        return getPreferences().getBoolean(DIFF_FORMAT_UDIFF, false);
+        int version = getVersion();
+        if (version == 2) {
+            return getPreferences().getBoolean(DIFF_FORMAT_UDIFF, false);
+        }
+        return false;
     }
 
     public void setDiffFormatUdiff(boolean isUdiff) {

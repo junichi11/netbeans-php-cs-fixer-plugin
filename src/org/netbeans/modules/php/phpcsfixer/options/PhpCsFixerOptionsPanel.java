@@ -180,6 +180,18 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         diffFormatUdiffCheckBox.setSelected(isUdiff);
     }
 
+    private void setVersionComponentsVisible(boolean isVisible) {
+        levelCheckBox.setVisible(isVisible);
+        levelComboBox.setVisible(isVisible);
+        configCheckBox.setVisible(isVisible);
+        configComboBox.setVisible(isVisible);
+        fixersCheckBox.setVisible(isVisible);
+        fixersTextField.setVisible(isVisible);
+        rulesCheckBox.setVisible(isVisible);
+        rulesTextField.setVisible(isVisible);
+        diffFormatUdiffCheckBox.setVisible(isVisible);
+    }
+
     private void setVersion1ComponentsVisible(boolean isVisible) {
         levelCheckBox.setVisible(isVisible);
         levelComboBox.setVisible(isVisible);
@@ -351,18 +363,13 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
 
     private void versionComboBoxItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_versionComboBoxItemStateChanged
         Integer item = (Integer) evt.getItem();
-        if (item == 2) {
-            setVersion1ComponentsVisible(false);
-            setVersion3ComponentsVisible(false);
+        setVersionComponentsVisible(false);
+        if (item == 1) {
+            setVersion1ComponentsVisible(true);
+        } else if (item == 2) {
             setVersion2ComponentsVisible(true);
         } else if (item == 3) {
-            setVersion1ComponentsVisible(false);
-            setVersion2ComponentsVisible(false);
             setVersion3ComponentsVisible(true);
-        } else {
-            setVersion1ComponentsVisible(true);
-            setVersion2ComponentsVisible(false);
-            setVersion3ComponentsVisible(false);
         }
     }//GEN-LAST:event_versionComboBoxItemStateChanged
 

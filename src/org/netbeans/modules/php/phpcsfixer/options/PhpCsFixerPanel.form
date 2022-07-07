@@ -31,7 +31,7 @@
                           <Group type="102" attributes="0">
                               <Component id="pathTextField" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="browseButton" min="-2" pref="78" max="-2" attributes="0"/>
+                              <Component id="browseButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="downloadButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
