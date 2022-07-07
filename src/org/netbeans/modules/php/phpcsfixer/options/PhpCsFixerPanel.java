@@ -372,7 +372,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             options.setCustom(optionsPanel.useCustom());
         }
         if (isDiffFormatUdiff != optionsPanel.isDiffFormatUdiff()) {
-            options.setDiff(optionsPanel.isDiffFormatUdiff());
+            options.setDiffFormatUdiff(optionsPanel.isDiffFormatUdiff());
         }
         // common
         if (!custom.equals(optionsPanel.getCustom())) {

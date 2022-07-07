@@ -35,7 +35,7 @@ public class Installer extends ModuleInstall {
         if (!StringUtils.isEmpty(phpCsFixerPath) && options.runSelfUpdateOnBoot()) {
             try {
                 PhpCsFixer.newInstance(phpCsFixerPath, true).selfUpdate(null);
-                LOGGER.log(INFO, "Run self-update"); // NOI18N
+                LOGGER.log(INFO, "PHP-CS-FIXER: Run self-update"); // NOI18N
             } catch (InvalidPhpExecutableException ex) {
                 LOGGER.log(WARNING, ex.getMessage());
             }
