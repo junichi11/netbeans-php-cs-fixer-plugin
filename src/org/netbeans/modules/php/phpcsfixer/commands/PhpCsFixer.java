@@ -48,7 +48,7 @@ public final class PhpCsFixer {
     // PHP CS Fixer
     public static final String NAME = "php-cs-fixer"; // NOI18N
     public static final String NAME_LONG = NAME + ".phar"; // NOI18N
-    public static final String DOWNLOAD_URL = "http://get.sensiolabs.org/php-cs-fixer.phar"; // NOI18N
+    public static final String DOWNLOAD_URL = "https://cs.symfony.com/download/php-cs-fixer-v3.phar"; // NOI18N
     private final String phpcsfixerPath;
     private boolean isDryRun;
     private boolean useSilentDescriptor;
