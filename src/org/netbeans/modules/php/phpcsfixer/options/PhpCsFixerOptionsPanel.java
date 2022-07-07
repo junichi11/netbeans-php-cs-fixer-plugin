@@ -37,7 +37,7 @@ import org.openide.util.NbBundle;
 public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 388435168100294200L;
-    private static final List<Integer> VERSIONS = Arrays.asList(1, 2);
+    private static final List<Integer> VERSIONS = Arrays.asList(1, 2, 3);
 
     /**
      * Creates new form PhpCsFixerOptionsPanel
@@ -195,6 +195,11 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         diffFormatUdiffCheckBox.setVisible(isVisible);
     }
 
+    private void setVersion3ComponentsVisible(boolean isVisible) {
+        rulesCheckBox.setVisible(isVisible);
+        rulesTextField.setVisible(isVisible);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -348,10 +353,16 @@ public class PhpCsFixerOptionsPanel extends javax.swing.JPanel {
         Integer item = (Integer) evt.getItem();
         if (item == 2) {
             setVersion1ComponentsVisible(false);
+            setVersion3ComponentsVisible(false);
             setVersion2ComponentsVisible(true);
+        } else if (item == 3) {
+            setVersion1ComponentsVisible(false);
+            setVersion2ComponentsVisible(false);
+            setVersion3ComponentsVisible(true);
         } else {
             setVersion1ComponentsVisible(true);
             setVersion2ComponentsVisible(false);
+            setVersion3ComponentsVisible(false);
         }
     }//GEN-LAST:event_versionComboBoxItemStateChanged
 

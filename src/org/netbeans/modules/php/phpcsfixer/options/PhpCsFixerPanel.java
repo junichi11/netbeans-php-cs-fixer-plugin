@@ -222,6 +222,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             for (FileObject child : children) {
                 if (!child.isFolder() && child.getNameExt().equals(PhpCsFixer.NAME_LONG)) {
                     LOGGER.log(INFO, PhpCsFixer.NAME_LONG + " already exists in {0} directory.", downloadFileObject.getName()); // NOI18N
+                    UiUtils.showErrorMessage(String.format(PhpCsFixer.NAME_LONG + " already exists in %s directory.", downloadFileObject.getName())); // NOI18N
                     try {
                         setPath(FileUtil.toFile(child).getCanonicalPath());
                     } catch (IOException ex) {
@@ -372,7 +373,7 @@ final class PhpCsFixerPanel extends javax.swing.JPanel {
             options.setCustom(optionsPanel.useCustom());
         }
         if (isDiffFormatUdiff != optionsPanel.isDiffFormatUdiff()) {
-            options.setDiff(optionsPanel.isDiffFormatUdiff());
+            options.setDiffFormatUdiff(optionsPanel.isDiffFormatUdiff());
         }
         // common
         if (!custom.equals(optionsPanel.getCustom())) {

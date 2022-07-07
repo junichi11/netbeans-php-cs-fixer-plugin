@@ -68,7 +68,7 @@ If you would like to run the self-update command on boot, please check it. (Unch
 
 ## Download
 
-- http://plugins.netbeans.org/plugin/49042/php-cs-fixer
+- https://plugins.netbeans.apache.org/catalogue/?id=36
 - https://github.com/junichi11/netbeans-php-cs-fixer-plugin/releases
 
 ## NOTE
@@ -84,7 +84,7 @@ If you would like to run the self-update command on boot, please check it. (Unch
 The Apache License, Version 2.0
 
 ```
-Copyright 2020 junichi11.
+Copyright 2022 junichi11.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

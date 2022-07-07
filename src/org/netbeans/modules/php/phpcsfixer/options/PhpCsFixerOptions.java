@@ -55,7 +55,7 @@ public final class PhpCsFixerOptions {
     private static final String RUN_SELF_UPDATE_ON_BOOT = "run.self.update.on.boot"; // NOI18N
     private volatile boolean phpcsfixerSearched = false;
 
-    public static final int LATEST_VERSION = 2;
+    public static final int LATEST_VERSION = 3;
 
     private PhpCsFixerOptions() {
     }
@@ -92,7 +92,7 @@ public final class PhpCsFixerOptions {
     }
 
     public int getVersion() {
-        int version = getPreferences().getInt(PHP_CS_FIXER_VERSION, 2);
+        int version = getPreferences().getInt(PHP_CS_FIXER_VERSION, LATEST_VERSION);
         if (version <= 0 || LATEST_VERSION < version) {
             version = LATEST_VERSION;
         }
