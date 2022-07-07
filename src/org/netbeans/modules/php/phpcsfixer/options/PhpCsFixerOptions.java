@@ -55,7 +55,7 @@ public final class PhpCsFixerOptions {
     private static final String RUN_SELF_UPDATE_ON_BOOT = "run.self.update.on.boot"; // NOI18N
     private volatile boolean phpcsfixerSearched = false;
 
-    public static final int LATEST_VERSION = 2;
+    public static final int LATEST_VERSION = 3;
 
     private PhpCsFixerOptions() {
     }
